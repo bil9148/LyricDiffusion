@@ -20,6 +20,8 @@ def getLyrics(songName: str, artistName: str):
         if len(verses) == 0:
             raise Exception("No lyrics found")
 
+        print(f"Found {len(verses)} verses")
+
         return verses
 
     except Exception as e:
