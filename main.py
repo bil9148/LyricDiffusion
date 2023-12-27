@@ -3,9 +3,8 @@ import lyrics2Images
 
 
 def run():
+    """Runs the program"""
     try:
-        """Runs the program"""
-
         # songName = input("Enter the song name: ")
         # artistName = input("Enter the artist name: ")
 
@@ -20,7 +19,7 @@ def run():
 
         assert len(verses) > 0, "No lyrics found"
 
-        # DGSpitzer/Cyberpunk-Anime-Diffusion
+        # DGSpitzer/Cyberpunk-Anime-Diffusion - Works
         # stabilityai/sdxl-turbo -
         # SG161222/Realistic_Vision_V6.0_B1_noVAE -
         # SG161222/Realistic_Vision_V2.0 -
@@ -28,7 +27,7 @@ def run():
         # stabilityai/stable-diffusion-2-1 -
 
         l2i = lyrics2Images.Lyrics2Images(
-            num_inference_steps=50, use_auth_token=False, prompt=f"vibrant and joyful visuals inspired by the sunny lyrics of {songName} by {artistName}", model_id="DGSpitzer/Cyberpunk-Anime-Diffusion", variant="fp16")
+            num_inference_steps=50, use_auth_token=False, prompt=f"digital art", model_id="stabilityai/sdxl-turbo", variant="fp16")
 
         outputPath = rf"C:\Users\andre\source\repos\AIG\images\{songName} - {artistName}"
 
