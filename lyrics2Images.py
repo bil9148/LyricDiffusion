@@ -37,10 +37,6 @@ class Lyrics2Images:
     def runL2I(self, verses: list[str], output_path: str):
         """Runs the model on the given verses and saves the images to the output path"""
 
-        # input_path: str
-        # Parsing the verses from a file. Commented out, because we are using the Genius API instead.
-        # verses = parse_lyrics(input_path, self.prompt)
-
         # Load the model pipeline
         pipe = self.load_model_pipeline()
 
@@ -51,13 +47,28 @@ class Lyrics2Images:
         # Run the model on each verse
         with autocast("cuda"):
             for idx, verse in enumerate(verses):
-                image = pipe(verse, num_inference_steps=self.num_inference_steps)[
-                    "sample"][0]
+                result = pipe(
+                    verse, num_inference_steps=self.num_inference_steps)
+
+                assert "images" in result, "Key 'images' not present in the result dictionary."
+
+                # Get the first image from the 'images' key
+                image = result['images'][0]
                 image.save(f"{output_path}/{idx}.png")
 
 
-l2i = Lyrics2Images()
-verses = ["Nissan R34 GTR",
-          "BMW e30"]
+def testLyrics2Images():
+    l2i = Lyrics2Images()
+    verses = ["Nissan R33 GTR",
+              "BMW e30"]
 
-l2i.runL2I(verses=verses, output_path=r"C:\Users\andre\source\repos\AIG\images")
+    l2i.runL2I(verses=verses,
+               output_path=r"C:\Users\andre\source\repos\AIG\images")
+
+    assert os.path.exists(
+        r"C:\Users\andre\source\repos\AIG\images\0.png"), "Image 0 does not exist"
+    assert os.path.exists(
+        r"C:\Users\andre\source\repos\AIG\images\1.png"), "Image 1 does not exist"
+
+
+testLyrics2Images()
