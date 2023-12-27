@@ -46,7 +46,8 @@ class Lyrics2Images:
 
         # Run the model on each verse
         with autocast("cuda"):
-            for idx, verse in enumerate(verses):
+            for i in tqdm(range(len(verses))):
+                verse = verses[i]
                 result = pipe(
                     verse, num_inference_steps=self.num_inference_steps)
 
@@ -54,7 +55,7 @@ class Lyrics2Images:
 
                 # Get the first image from the 'images' key
                 image = result['images'][0]
-                image.save(f"{output_path}/{idx}.png")
+                image.save(f"{output_path}/{i}.png")
 
 
 def testLyrics2Images():
