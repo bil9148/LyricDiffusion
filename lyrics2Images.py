@@ -61,9 +61,6 @@ class Lyrics2Images:
                         result = pipe(
                             verse, num_inference_steps=self.num_inference_steps)
 
-                        print("aaaaaa")
-                        print(f"Result:{result}")
-
                         assert "images" in result, "Key 'images' not present in the result dictionary."
 
                         # Get the first image from the 'images' key
