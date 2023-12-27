@@ -28,7 +28,7 @@ def run():
         # stabilityai/stable-diffusion-2-1 - Downloaded
 
         l2i = lyrics2Images.Lyrics2Images(
-            num_inference_steps=50, use_auth_token=False, prompt=f"vibrant and joyful visuals inspired by the sunny lyrics of {songName} by {artistName}", model_id="DGSpitzer/Cyberpunk-Anime-Diffusion", revision="fp16")
+            num_inference_steps=50, use_auth_token=False, prompt=f"vibrant and joyful visuals inspired by the sunny lyrics of {songName} by {artistName}", model_id="DGSpitzer/Cyberpunk-Anime-Diffusion", variant="fp16")
 
         outputPath = rf"C:\Users\andre\source\repos\AIG\images\{songName} - {artistName}"
 

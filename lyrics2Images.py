@@ -10,7 +10,7 @@ from diffusers import StableDiffusionPipeline
 class Lyrics2Images:
     def __init__(self,
                  model_id: str = "CompVis/stable-diffusion-v1-4",
-                 revision: str = "fp16",
+                 variant: str = "fp16",
                  torch_dtype: torch.dtype = torch.float16,
                  prompt: str = "digital art",
                  num_inference_steps: int = 50,
@@ -19,7 +19,7 @@ class Lyrics2Images:
 
                  ):
         self.model_id = model_id
-        self.revision = revision
+        self.variant = variant
         self.torch_dtype = torch_dtype
         self.prompt = prompt
         self.num_inference_steps = num_inference_steps
@@ -30,7 +30,7 @@ class Lyrics2Images:
 
     def load_model_pipeline(self) -> StableDiffusionPipeline:
         return StableDiffusionPipeline.from_pretrained(self.model_id,
-                                                       revision=self.revision,
+                                                       variant=self.variant,
                                                        torch_dtype=self.torch_dtype,
                                                        use_auth_token=self.use_auth_token).to("cuda")
 
