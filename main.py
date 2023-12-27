@@ -3,22 +3,31 @@ import lyrics2Images
 
 
 def run():
-    """Runs the program"""
+    try:
+        """Runs the program"""
 
-    songName = "Dior"
-    artistName = "Pop Smoke"
+        songName = input("Enter the song name: ")
+        artistName = input("Enter the artist name: ")
 
-    # Get the lyrics
-    verses = getLyrics(songName, artistName)
+        assert len(songName) > 0, "Song name cannot be empty"
+        assert len(artistName) > 0, "Artist name cannot be empty"
 
-    assert len(verses) > 0, "No lyrics found"
+        # Get the lyrics
+        verses = getLyrics(songName, artistName)
 
-    l2i = lyrics2Images.Lyrics2Images()
+        assert len(verses) > 0, "No lyrics found"
 
-    outputPath = rf"C:\Users\andre\source\repos\AIG\images\{songName} - {artistName}"
+        l2i = lyrics2Images.Lyrics2Images(
+            num_inference_steps=100, use_auth_token=False, prompt="lyrics", model_id="CompVis/stable-diffusion-v1-4", revision="fp16")
 
-    # Run the model
-    l2i.runL2I(verses=verses, output_path=outputPath)
+        outputPath = rf"C:\Users\andre\source\repos\AIG\images\{songName} - {artistName}"
+
+        # Run the model
+        l2i.runL2I(verses=verses, output_path=outputPath)
+
+    except Exception as e:
+        print(e)
+        return
 
 
 run()
