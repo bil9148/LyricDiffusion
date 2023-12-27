@@ -14,12 +14,6 @@ def getLyrics(songName: str, artistName: str):
         if song is None:
             raise Exception("Song not found")
 
-        songCorrect = input(
-            f"Is this the correct song? (y/n)\n{song.artist}-{song.title}\n")
-
-        if songCorrect.lower() != "y":
-            raise Exception("Song not found")
-
         # Split the lyrics into verses
         verses = song.lyrics.split("\n")
 
@@ -31,15 +25,3 @@ def getLyrics(songName: str, artistName: str):
     except Exception as e:
         print(e)
         return
-
-
-def testGetLyrics():
-    """Tests the getLyrics function"""
-
-    verses = getLyrics("Dior", "Pop Smoke")
-
-    assert len(verses) == 78, "The number of verses is not correct, expected 78 verses, got " + \
-        str(len(verses)) + " verses instead."
-
-
-testGetLyrics()
