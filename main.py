@@ -27,7 +27,7 @@ def run():
         # stabilityai/stable-diffusion-2-1 -
 
         l2i = lyrics2Images.Lyrics2Images(
-            num_inference_steps=50, use_auth_token=False, prompt=f"digital art", variant="fp16")
+            num_inference_steps=50, use_auth_token=False, prompt=f"digital art", model_id="DGSpitzer/Cyberpunk-Anime-Diffusion", variant="fp16")
 
         outputPath = rf"C:\Users\andre\source\repos\AIG\images\{songName} - {artistName}"
 
