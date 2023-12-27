@@ -2,7 +2,7 @@ import unittest
 import tempfile
 import shutil
 import os
-from diffuseLyrics import Lyrics2Images
+from lyrics2Images import Lyrics2Images
 
 
 class TestLyrics2Images(unittest.TestCase):

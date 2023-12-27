@@ -1,5 +1,5 @@
 from lyricExtractor import getLyrics
-import diffuseLyrics
+import lyrics2Images
 
 
 def run():
@@ -13,7 +13,7 @@ def run():
 
     assert len(verses) > 0, "No lyrics found"
 
-    l2i = diffuseLyrics.Lyrics2Images()
+    l2i = lyrics2Images.Lyrics2Images()
 
     outputPath = rf"C:\Users\andre\source\repos\AIG\images\{songName} - {artistName}"
 
