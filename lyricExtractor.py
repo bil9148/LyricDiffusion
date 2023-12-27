@@ -15,4 +15,13 @@ def getLyrics(songName: str, artistName: str):
     return verses
 
 
-getLyrics("Dior", "Pop Smoke")
+def testGetLyrics():
+    """Tests the getLyrics function"""
+
+    verses = getLyrics("Dior", "Pop Smoke")
+
+    assert len(verses) == 78, "The number of verses is not correct, expected 78 verses, got " + \
+        str(len(verses)) + " verses instead."
+
+
+testGetLyrics()
