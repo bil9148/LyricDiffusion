@@ -56,20 +56,3 @@ class Lyrics2Images:
                 # Get the first image from the 'images' key
                 image = result['images'][0]
                 image.save(f"{output_path}/{i}.png")
-
-
-def testLyrics2Images():
-    l2i = Lyrics2Images()
-    verses = ["Nissan R33 GTR",
-              "BMW e30"]
-
-    l2i.runL2I(verses=verses,
-               output_path=r"C:\Users\andre\source\repos\AIG\images")
-
-    assert os.path.exists(
-        r"C:\Users\andre\source\repos\AIG\images\0.png"), "Image 0 does not exist"
-    assert os.path.exists(
-        r"C:\Users\andre\source\repos\AIG\images\1.png"), "Image 1 does not exist"
-
-
-testLyrics2Images()
