@@ -20,7 +20,7 @@ def run():
         l2i = lyrics2Images.Lyrics2Images(
             num_inference_steps=100, use_auth_token=False, prompt="Vintage art", model_id="CompVis/stable-diffusion-v1-4", revision="fp16")
 
-        outputPath = rf"C:\Users\andre\source\repos\AIG\images\{songName} - {artistName}"
+        outputPath = rf"C:\Users\andre\source\repos\AIG\images\{songName} - {artistName}x"
 
         # Run the model
         l2i.runL2I(verses=verses, output_path=outputPath)
