@@ -1,11 +1,18 @@
 from lyricsgenius import Genius
 
-apiKey = "0r7QN8utjRy_k7Ims4oLjaxHzBo9XPbtKi9W8IE6vTdgIhpTus0IZ8TOYHMFJMUQ"
-genius = Genius(apiKey)
 
-songName = "Dior"
-artistName = "Pop Smoke"
+def getLyrics(songName: str, artistName: str):
+    """Returns the lyrics of a song given the song name and artist name"""
 
-song = genius.search_song(songName, artistName)
+    geniusApiKey = "0r7QN8utjRy_k7Ims4oLjaxHzBo9XPbtKi9W8IE6vTdgIhpTus0IZ8TOYHMFJMUQ"
+    genius = Genius(geniusApiKey)
 
-print(song.lyrics)
+    song = genius.search_song(songName, artistName)
+
+    # Split the lyrics into verses
+    verses = song.lyrics.split("\n")
+
+    return verses
+
+
+getLyrics("Dior", "Pop Smoke")
