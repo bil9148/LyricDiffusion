@@ -36,23 +36,43 @@ class Lyrics2Images:
 
     def runL2I(self, verses: list[str], output_path: str):
         """Runs the model on the given verses and saves the images to the output path"""
+        try:
+            if verses is None:
+                raise Exception("Verses cannot be None")
 
-        # Load the model pipeline
-        pipe = self.load_model_pipeline()
+            # Load the model pipeline
+            pipe = self.load_model_pipeline()
 
-        # Create the output folder if it doesn't exist
-        if not os.path.exists(output_path):
-            os.mkdir(output_path)
+            # Create the output folder if it doesn't exist
+            if not os.path.exists(output_path):
+                os.mkdir(output_path)
 
-        # Run the model on each verse
-        with autocast("cuda"):
-            for i in tqdm(range(len(verses))):
-                verse = verses[i]
-                result = pipe(
-                    verse, num_inference_steps=self.num_inference_steps)
+            print(verses)
 
-                assert "images" in result, "Key 'images' not present in the result dictionary."
+            # Run the model on each verse
+            with autocast("cuda"):
+                for i in tqdm(range(len(verses))):
+                    try:
 
-                # Get the first image from the 'images' key
-                image = result['images'][0]
-                image.save(f"{output_path}/{i}.png")
+                        verse = verses[i]
+
+                        print(f"Verse: {verse}")
+
+                        result = pipe(
+                            verse, num_inference_steps=self.num_inference_steps)
+
+                        print("aaaaaa")
+                        print(f"Result:{result}")
+
+                        assert "images" in result, "Key 'images' not present in the result dictionary."
+
+                        # Get the first image from the 'images' key
+                        image = result['images'][0]
+                        image.save(f"{output_path}/{i}.png")
+                    except Exception as e:
+                        print(f"Error for verse: {verse}\n{e}\n")
+                        continue
+
+        except Exception as e:
+            print(f"Error in runL2I(): {e}")
+            return

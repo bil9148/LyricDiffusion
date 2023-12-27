@@ -27,7 +27,7 @@ def run():
         # stabilityai/stable-diffusion-2-1 -
 
         l2i = lyrics2Images.Lyrics2Images(
-            num_inference_steps=50, use_auth_token=False, prompt=f"digital art", model_id="stabilityai/sdxl-turbo", variant="fp16")
+            num_inference_steps=50, use_auth_token=False, prompt=f"digital art", variant="fp16")
 
         outputPath = rf"C:\Users\andre\source\repos\AIG\images\{songName} - {artistName}"
 
@@ -35,7 +35,7 @@ def run():
         l2i.runL2I(verses=verses, output_path=outputPath)
 
     except Exception as e:
-        print(e)
+        print(f"Error in run(): {e}")
         return
 
 
