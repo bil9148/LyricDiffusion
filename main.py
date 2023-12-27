@@ -21,11 +21,11 @@ def run():
         assert len(verses) > 0, "No lyrics found"
 
         # DGSpitzer/Cyberpunk-Anime-Diffusion
-        # stabilityai/sdxl-turbo - Didn't work
-        # SG161222/Realistic_Vision_V6.0_B1_noVAE - Didn't work
-        # SG161222/Realistic_Vision_V2.0 - Didn't work
-        # Lykon/DreamShaper - Didn't work
-        # stabilityai/stable-diffusion-2-1 - Downloaded
+        # stabilityai/sdxl-turbo -
+        # SG161222/Realistic_Vision_V6.0_B1_noVAE -
+        # SG161222/Realistic_Vision_V2.0 -
+        # Lykon/DreamShaper -
+        # stabilityai/stable-diffusion-2-1 -
 
         l2i = lyrics2Images.Lyrics2Images(
             num_inference_steps=50, use_auth_token=False, prompt=f"vibrant and joyful visuals inspired by the sunny lyrics of {songName} by {artistName}", model_id="DGSpitzer/Cyberpunk-Anime-Diffusion", variant="fp16")
