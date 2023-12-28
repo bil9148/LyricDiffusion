@@ -61,8 +61,8 @@ class LyricsGeneratorWidget(QtWidgets.QWidget):
         self.button_generate.clicked.connect(self.generate)
 
         self.layout = QtWidgets.QGridLayout()
-        self.layout.addWidget(self.label_songName, 0, 0)
-        self.layout.addWidget(self.label_artistName, 1, 0)
+        self.layout.addWidget(self.label_songName, 1, 0)
+        self.layout.addWidget(self.label_artistName, 0, 0)
         self.layout.addWidget(self.textbox_songName, 0, 1)
         self.layout.addWidget(self.textbox_artistName, 1, 1)
         self.layout.addWidget(self.label_modelList, 2, 0)
