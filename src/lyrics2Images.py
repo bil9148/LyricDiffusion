@@ -57,7 +57,7 @@ class Lyrics2Images:
 
             # Get the first image from the 'images' key
             image = result['images'][0]
-            image.save(f"{output_path}/{index}.png")
+            image.save(os.path.join(output_path, f"{index}.png"))
         except Exception as e:
             logging.error(
                 f"Error in process_verse(): {e}.\nStack trace: {traceback.format_exc()}")
@@ -66,6 +66,9 @@ class Lyrics2Images:
         """Runs the model on the given verses and saves the images to the output path"""
         # Load the model pipeline
         pipe = self.load_auto_pipeline()
+
+        # Create the output directory
+        os.makedirs(output_path, exist_ok=True)
 
         # Run the model on each verse
         with autocast("cuda"):
@@ -95,9 +98,6 @@ def run(song_name, artist_name, model_id, num_inference_steps):
 
         output_path = os.path.join(
             OUTPUT_PATH, "images", f"{song_name} - {artist_name}")
-
-        # Create the output directory
-        os.makedirs(output_path, exist_ok=True)
 
         # Run the model
         l2i.generate(verses=verses, output_path=output_path)
