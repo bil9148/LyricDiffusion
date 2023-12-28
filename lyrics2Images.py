@@ -6,6 +6,7 @@ import torch
 from torch import autocast
 from diffusers import StableDiffusionPipeline
 from diffusers import AutoPipelineForText2Image
+import logging
 
 
 class Lyrics2Images:
@@ -37,9 +38,29 @@ class Lyrics2Images:
         return AutoPipelineForText2Image.from_pretrained(
             self.model_id, torch_dtype=self.torch_dtype, variant=self.variant, use_auth_token=self.use_auth_token).to("cuda")
 
+    def process_verse(self, verse: str, output_path: str, index: int, pipe: AutoPipelineForText2Image):
+        try:
+            if len(verse) == 0 or (verse.startswith("[") and verse.endswith("]")):
+                logging.info(f"Skipping verse: {verse}")
+                return
+
+            # TODO - instead of logging this, show in the UI
+            logging.info(f"Verse: {verse}")
+
+            result = pipe(
+                prompt=verse, num_inference_steps=self.num_inference_steps)
+
+            assert "images" in result, "Key 'images' not present in the result dictionary."
+
+            # Get the first image from the 'images' key
+            image = result['images'][0]
+            image.save(f"{output_path}/{index}.png")
+        except Exception as e:
+            logging.error(
+                f"Error in process_verse(): {e}.\nStack trace: {traceback.format_exc()}")
+
     def run(self, verses: list[str], output_path: str):
         """Runs the model on the given verses and saves the images to the output path"""
-
         # Load the model pipeline
         pipe = self.load_auto_pipeline()
 
@@ -49,32 +70,5 @@ class Lyrics2Images:
 
         # Run the model on each verse
         with autocast("cuda"):
-            for i in tqdm(range(len(verses))):
-                try:
-
-                    verse = verses[i]
-
-                    # If verse is empty, skip it
-                    if len(verse) == 0:
-                        print(f"Skipping empty verse")
-                        continue
-
-                    # If verse starts with [ and ends with ], skip it
-                    if verse.startswith("[") and verse.endswith("]"):
-                        print(f"Skipping verse: {verse}")
-                        continue
-
-                    print(f"Verse: {verse}")
-
-                    result = pipe(
-                        prompt=verse, num_inference_steps=self.num_inference_steps)
-
-                    assert "images" in result, "Key 'images' not present in the result dictionary."
-
-                    # Get the first image from the 'images' key
-                    image = result['images'][0]
-                    image.save(f"{output_path}/{i}.png")
-                except Exception as e:
-                    print(
-                        f"Error for verse: {verse}\n{e}\nStack trace: {traceback.format_exc()}\n")
-                    continue
+            for i, verse in enumerate(tqdm(verses)):
+                self.process_verse(verse, output_path, i, pipe)
