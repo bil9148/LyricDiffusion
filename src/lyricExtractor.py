@@ -11,7 +11,6 @@ def getLyrics(songName: str, artistName: str):
 
         song = genius.search_song(songName, artistName)
 
-        # Ask user if the found song is the correct one
         if song is None:
             raise Exception("Song not found")
 
@@ -21,10 +20,9 @@ def getLyrics(songName: str, artistName: str):
         if len(verses) == 0:
             raise Exception("No lyrics found")
 
-        logging.info(f"Found {len(verses)} verses")
-
         return verses
 
     except Exception as e:
-        print(e)
-        return
+        logging.error(
+            f"Error getting lyrics: {e}.\nStacktrace:{e.__traceback__}")
+        return []

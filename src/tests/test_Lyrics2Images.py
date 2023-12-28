@@ -1,8 +1,8 @@
+from ..lyrics2Images import Lyrics2Images
 import unittest
 import tempfile
 import shutil
 import os
-from lyrics2Images import Lyrics2Images
 
 
 class TestLyrics2Images(unittest.TestCase):
