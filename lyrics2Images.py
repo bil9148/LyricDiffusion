@@ -35,7 +35,7 @@ class Lyrics2Images:
         #                                                torch_dtype=self.torch_dtype,
         #                                                use_auth_token=self.use_auth_token).to("cuda")
         return AutoPipelineForText2Image.from_pretrained(
-            self.model_id, torch_dtype=self.torch_dtype, variant=self.variant).to("cuda")
+            self.model_id, torch_dtype=self.torch_dtype, variant=self.variant, use_auth_token=self.use_auth_token).to("cuda")
 
     def runL2I(self, verses: list[str], output_path: str):
         """Runs the model on the given verses and saves the images to the output path"""
