@@ -99,6 +99,9 @@ def run(song_name, artist_name, model_id, num_inference_steps):
         output_path = os.path.join(
             OUTPUT_PATH, "images", f"{song_name} - {artist_name}")
 
+        logging.info(
+            f"Starting generation for {song_name} - {artist_name}.\nModel: {model_id}.\nOutput path: {output_path}\nTorch dtype: {l2i.torch_dtype}\nVariant: {l2i.variant}\nNum inference steps: {l2i.num_inference_steps}")
+
         # Run the model
         l2i.generate(verses=verses, output_path=output_path)
 
