@@ -10,8 +10,9 @@ class TestLyrics2Images(unittest.TestCase):
     def setUp(self):
         self.temp_dir = tempfile.mkdtemp()
 
-    # def tearDown(self):
-        # shutil.rmtree(self.temp_dir)
+    def tearDown(self):
+        shutil.rmtree(os.path.join(
+            OUTPUT_PATH, "images", "test"))
 
     def test_runL2I_with_valid_verses(self):
         # Arrange
