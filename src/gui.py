@@ -10,17 +10,32 @@ class LyricsGeneratorWidget(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
 
+        # Labels for song name and artist name
         self.label_songName = QtWidgets.QLabel("Song name:")
         self.label_songName.setFont(self.getFont())
 
         self.label_artistName = QtWidgets.QLabel("Artist name:")
         self.label_artistName.setFont(self.getFont())
 
+        # Textboxes for song name and artist name
         self.textbox_songName = QtWidgets.QLineEdit()
         self.textbox_songName.setFont(self.getFont())
 
         self.textbox_artistName = QtWidgets.QLineEdit()
         self.textbox_artistName.setFont(self.getFont())
+
+        # Model list
+        self.label_modelList = QtWidgets.QLabel("Model:")
+        self.label_modelList.setFont(self.getFont())
+
+        self.modelList = QtWidgets.QComboBox()
+        self.modelList.addItem("stabilityai/sdxl-turbo")
+        self.modelList.addItem("stabilityai/stable-diffusion-2-1")
+        self.modelList.addItem("SG161222/Realistic_Vision_V2.0")
+        self.modelList.addItem("SG161222/Realistic_Vision_V6.0_B1_noVAE")
+        self.modelList.addItem("Lykon/DreamShaper")
+        self.modelList.addItem("DGSpitzer/Cyberpunk-Anime-Diffusion")
+        self.modelList.setFont(self.getFont())
 
         self.button_generate = QtWidgets.QPushButton("Generate")
         self.button_generate.setFont(self.getFont())
@@ -31,16 +46,13 @@ class LyricsGeneratorWidget(QtWidgets.QWidget):
         self.button_generate.clicked.connect(self.generate)
 
         self.layout = QtWidgets.QGridLayout()
-        self.layout.addWidget(self.label_songName, 0, 0,
-                              QtCore.Qt.AlignCenter)
-        self.layout.addWidget(self.textbox_songName, 0,
-                              1, QtCore.Qt.AlignCenter)
-        self.layout.addWidget(self.label_artistName, 1,
-                              0, QtCore.Qt.AlignCenter)
-        self.layout.addWidget(self.textbox_artistName, 1,
-                              1, QtCore.Qt.AlignCenter)
-        self.layout.addWidget(self.button_generate, 2, 0,
-                              1, 2, QtCore.Qt.AlignCenter)
+        self.layout.addWidget(self.label_songName, 0, 0)
+        self.layout.addWidget(self.label_artistName, 1, 0)
+        self.layout.addWidget(self.textbox_songName, 0, 1)
+        self.layout.addWidget(self.textbox_artistName, 1, 1)
+        self.layout.addWidget(self.label_modelList, 2, 0)
+        self.layout.addWidget(self.modelList, 2, 1)
+        self.layout.addWidget(self.button_generate, 3, 1)
 
         self.setLayout(self.layout)
 
@@ -48,7 +60,7 @@ class LyricsGeneratorWidget(QtWidgets.QWidget):
         songName = self.textbox_songName.text()
         artistName = self.textbox_artistName.text()
 
-        model_id = "stabilityai/sdxl-turbo"
+        model_id = self.modelList.currentText()
         num_inference_steps = 50
 
         run(song_name=songName, artist_name=artistName,
