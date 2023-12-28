@@ -28,6 +28,14 @@ class LyricsGeneratorWidget(QtWidgets.QWidget):
         self.label_modelList = QtWidgets.QLabel("Model:")
         self.label_modelList.setFont(self.getFont())
 
+       # Verse that's being generated
+        self.label_verse = QtWidgets.QLabel("Verse:")
+        self.label_verse.setFont(self.getFont())
+
+        self.textbox_verse = QtWidgets.QLineEdit()
+        self.textbox_verse.setFont(self.getFont())
+        self.textbox_verse.setReadOnly(True)
+
         self.modelList = QtWidgets.QComboBox()
         self.modelList.addItem("stabilityai/sdxl-turbo")
         self.modelList.addItem("stabilityai/stable-diffusion-2-1")
@@ -52,7 +60,9 @@ class LyricsGeneratorWidget(QtWidgets.QWidget):
         self.layout.addWidget(self.textbox_artistName, 1, 1)
         self.layout.addWidget(self.label_modelList, 2, 0)
         self.layout.addWidget(self.modelList, 2, 1)
-        self.layout.addWidget(self.button_generate, 3, 1)
+        self.layout.addWidget(self.label_verse, 3, 0)
+        self.layout.addWidget(self.textbox_verse, 3, 1)
+        self.layout.addWidget(self.button_generate, 4, 1)
 
         self.setLayout(self.layout)
 
