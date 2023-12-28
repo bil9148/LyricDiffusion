@@ -83,7 +83,7 @@ class LyricsGeneratorWidget(QtWidgets.QWidget):
         num_inference_steps = 50
 
         run(song_name=songName, artist_name=artistName,
-            model_id=model_id, num_inference_steps=num_inference_steps, loading_bar=self.loading_bar, textbox_info=self.textbox_info)
+            model_id=model_id, num_inference_steps=num_inference_steps, uiWidget=self)
 
 
 class LyricsGeneratorApp(QtWidgets.QMainWindow):

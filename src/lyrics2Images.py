@@ -61,7 +61,7 @@ class Lyrics2Images:
             logging.error(
                 f"Error in process_verse(): Verse: {verse}\n Exception: {e}.\nStack trace: {traceback.format_exc()}")
 
-    def generate(self, verses: list[str], output_path: str, loading_bar, textbox_info):
+    def generate(self, verses: list[str], output_path: str, uiWidget):
         """Runs the model on the given verses and saves the images to the output path"""
         # Load the model pipeline
         pipe = self.load_auto_pipeline()
@@ -69,21 +69,17 @@ class Lyrics2Images:
         # Create the output directory
         os.makedirs(output_path, exist_ok=True)
 
-        if loading_bar is not None:
-            # Set max value for the loading bar
-            loading_bar.setMaximum(len(verses))
-            loading_bar.setValue(0)
+        if uiWidget is not None:
+            uiWidget.loading_bar.setMaximum(len(verses))
+            uiWidget.loading_bar.setValue(0)
 
         # Run the model on each verse
         with autocast("cuda"):
             for i, verse in enumerate(tqdm(verses)):
-                if textbox_info is not None:
-                    # Update the textbox
-                    textbox_info.setText(verse)
 
-                if loading_bar is not None:
-                    # Update the loading bar
-                    loading_bar.setValue(i)
+                if uiWidget is not None:
+                    uiWidget.textbox_info.setText(verse)
+                    uiWidget.loading_bar.setValue(i)
 
                 # Force UI update
                 QtWidgets.QApplication.processEvents()
@@ -91,14 +87,12 @@ class Lyrics2Images:
                 self.process_verse(verse, output_path, i, pipe)
 
         # Update the UI
-        if loading_bar is not None:
-            loading_bar.setValue(loading_bar.maximum())
-
-        if textbox_info is not None:
-            textbox_info.setText("Done")
+        if uiWidget is not None:
+            uiWidget.loading_bar.setValue(uiWidget.loading_bar.maximum())
+            uiWidget.textbox_info.setText("Done")
 
 
-def run(song_name, artist_name, model_id, num_inference_steps, loading_bar, textbox_info):
+def run(song_name, artist_name, model_id, num_inference_steps, uiWidget):
     """Runs the program"""
     try:
         # Validate the input
@@ -125,8 +119,7 @@ def run(song_name, artist_name, model_id, num_inference_steps, loading_bar, text
             f"Starting generation for {song_name} - {artist_name}.\nModel: {model_id}.\nOutput path: {output_path}\nTorch dtype: {l2i.torch_dtype}\nVariant: {l2i.variant}\nNum inference steps: {l2i.num_inference_steps}")
 
         # Run the model
-        l2i.generate(verses=verses, output_path=output_path,
-                     loading_bar=loading_bar, textbox_info=textbox_info)
+        l2i.generate(verses=verses, output_path=output_path, uiWidget=uiWidget)
 
     except Exception as e:
         logging.error(
