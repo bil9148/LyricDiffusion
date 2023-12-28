@@ -1,10 +1,11 @@
 import os
 from tqdm import tqdm
 from utils import auth_hugging_face
-
+import traceback
 import torch
 from torch import autocast
-from diffusers import StableDiffusionPipeline
+# from diffusers import StableDiffusionPipeline
+from diffusers import AutoPipelineForText2Image
 
 
 class Lyrics2Images:
@@ -28,11 +29,13 @@ class Lyrics2Images:
         if self.use_auth_token:
             auth_hugging_face()
 
-    def load_model_pipeline(self) -> StableDiffusionPipeline:
-        return StableDiffusionPipeline.from_pretrained(self.model_id,
-                                                       variant=self.variant,
-                                                       torch_dtype=self.torch_dtype,
-                                                       use_auth_token=self.use_auth_token).to("cuda")
+    def load_model_pipeline(self) -> AutoPipelineForText2Image:
+        # return StableDiffusionPipeline.from_pretrained(self.model_id,
+        #                                                variant=self.variant,
+        #                                                torch_dtype=self.torch_dtype,
+        #                                                use_auth_token=self.use_auth_token).to("cuda")
+        return AutoPipelineForText2Image.from_pretrained(
+            self.model_id, torch_dtype=self.torch_dtype, variant=self.variant).to("cuda")
 
     def runL2I(self, verses: list[str], output_path: str):
         """Runs the model on the given verses and saves the images to the output path"""
@@ -56,10 +59,20 @@ class Lyrics2Images:
 
                         verse = verses[i]
 
+                        # If verse is empty, skip it
+                        if len(verse) == 0:
+                            print(f"Skipping empty verse")
+                            continue
+
+                        # If verse starts with [ and ends with ], skip it
+                        if verse.startswith("[") and verse.endswith("]"):
+                            print(f"Skipping verse: {verse}")
+                            continue
+
                         print(f"Verse: {verse}")
 
                         result = pipe(
-                            verse, num_inference_steps=self.num_inference_steps)
+                            prompt=verse, num_inference_steps=self.num_inference_steps)
 
                         assert "images" in result, "Key 'images' not present in the result dictionary."
 
@@ -67,7 +80,8 @@ class Lyrics2Images:
                         image = result['images'][0]
                         image.save(f"{output_path}/{i}.png")
                     except Exception as e:
-                        print(f"Error for verse: {verse}\n{e}\n")
+                        print(
+                            f"Error for verse: {verse}\n{e}\nStack trace: {traceback.format_exc()}\n")
                         continue
 
         except Exception as e:
