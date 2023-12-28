@@ -5,7 +5,7 @@ import traceback
 from logger import configure_logging
 
 
-def run(song_name, artist_name, model_id, num_inference_steps):
+def generate(song_name, artist_name, model_id, num_inference_steps):
     """Runs the program"""
     try:
         # Validate the input
@@ -37,4 +37,5 @@ def run(song_name, artist_name, model_id, num_inference_steps):
 
 if __name__ == "__main__":
     configure_logging()
-    run("Gangstas Paradise", "Coolio", "stabilityai/stable-diffusion-2-1", 50)
+    generate("Gangstas Paradise", "Coolio",
+             "stabilityai/stable-diffusion-2-1", 50)
