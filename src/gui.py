@@ -1,6 +1,6 @@
 import sys
 from PySide6 import QtCore, QtWidgets, QtGui
-from lyrics2Images import run
+import lyrics2Images
 
 
 class LyricsGeneratorWidget(QtWidgets.QWidget):
@@ -98,8 +98,8 @@ class LyricsGeneratorWidget(QtWidgets.QWidget):
             artistName) > 0, "Artist name cannot be empty"
         assert num_inference_steps and num_inference_steps > 0 and num_inference_steps < 100, "Number of inference steps must be between 1 and 100"
 
-        run(song_name=songName, artist_name=artistName,
-            model_id=model_id, num_inference_steps=num_inference_steps, uiWidget=self)
+        lyrics2Images.run(song_name=songName, artist_name=artistName,
+                          model_id=model_id, num_inference_steps=num_inference_steps, uiWidget=self)
 
 
 class LyricsGeneratorApp(QtWidgets.QMainWindow):
