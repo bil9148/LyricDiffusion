@@ -41,7 +41,7 @@ class Lyrics2Images:
         """Runs the model on the given verses and saves the images to the output path"""
 
         # Load the model pipeline
-        pipe = self.load_model_pipeline()
+        pipe = self.load_auto_pipeline()
 
         # Create the output folder if it doesn't exist
         if not os.path.exists(output_path):
