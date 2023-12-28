@@ -10,6 +10,7 @@ import lyrics2Images
 import traceback
 from lyricExtractor import getLyrics
 from output import OUTPUT_PATH
+from PySide6 import QtWidgets
 
 
 class Lyrics2Images:
@@ -43,12 +44,10 @@ class Lyrics2Images:
 
     def process_verse(self, verse: str, output_path: str, index: int, pipe: AutoPipelineForText2Image):
         try:
+            # Skip empty verses
             if len(verse) == 0 or (verse.startswith("[") and verse.endswith("]")):
                 logging.info(f"Skipping verse: {verse}")
                 return
-
-            # TODO - instead of logging this, show in the UI
-            logging.info(f"Verse: {verse}")
 
             result = pipe(
                 prompt=verse, num_inference_steps=self.num_inference_steps)
@@ -60,9 +59,9 @@ class Lyrics2Images:
             image.save(os.path.join(output_path, f"{index}.png"))
         except Exception as e:
             logging.error(
-                f"Error in process_verse(): {e}.\nStack trace: {traceback.format_exc()}")
+                f"Error in process_verse(): Verse: {verse}\n Exception: {e}.\nStack trace: {traceback.format_exc()}")
 
-    def generate(self, verses: list[str], output_path: str):
+    def generate(self, verses: list[str], output_path: str, loading_bar, textbox_verse):
         """Runs the model on the given verses and saves the images to the output path"""
         # Load the model pipeline
         pipe = self.load_auto_pipeline()
@@ -70,13 +69,26 @@ class Lyrics2Images:
         # Create the output directory
         os.makedirs(output_path, exist_ok=True)
 
+        # Set max value for the loading bar
+        loading_bar.setMaximum(len(verses))
+        loading_bar.setValue(0)
+
         # Run the model on each verse
         with autocast("cuda"):
             for i, verse in enumerate(tqdm(verses)):
+                # Update the textbox
+                textbox_verse.setText(verse)
+
+                # Update the loading bar
+                loading_bar.setValue(i)
+
+                # Force UI update
+                QtWidgets.QApplication.processEvents()
+
                 self.process_verse(verse, output_path, i, pipe)
 
 
-def run(song_name, artist_name, model_id, num_inference_steps):
+def run(song_name, artist_name, model_id, num_inference_steps, loading_bar, textbox_verse):
     """Runs the program"""
     try:
         # Validate the input
@@ -103,7 +115,8 @@ def run(song_name, artist_name, model_id, num_inference_steps):
             f"Starting generation for {song_name} - {artist_name}.\nModel: {model_id}.\nOutput path: {output_path}\nTorch dtype: {l2i.torch_dtype}\nVariant: {l2i.variant}\nNum inference steps: {l2i.num_inference_steps}")
 
         # Run the model
-        l2i.generate(verses=verses, output_path=output_path)
+        l2i.generate(verses=verses, output_path=output_path,
+                     loading_bar=loading_bar, textbox_verse=textbox_verse)
 
     except Exception as e:
         logging.error(

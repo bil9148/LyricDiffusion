@@ -5,7 +5,7 @@ from lyrics2Images import run
 
 class LyricsGeneratorWidget(QtWidgets.QWidget):
     def getFont(self) -> QtGui.QFont:
-        return QtGui.QFont("Arial", 16)
+        return QtGui.QFont("Arial", 14)
 
     def __init__(self):
         super().__init__()
@@ -39,9 +39,6 @@ class LyricsGeneratorWidget(QtWidgets.QWidget):
         # TODO - Loading bar
         self.loading_bar = QtWidgets.QProgressBar()
         self.loading_bar.setFont(self.getFont())
-        self.loading_bar.setMinimum(0)
-        self.loading_bar.setMaximum(100)
-        self.loading_bar.setValue(0)
         # Set width to 100% of the parent
         self.loading_bar.setSizePolicy(
             QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
@@ -83,7 +80,7 @@ class LyricsGeneratorWidget(QtWidgets.QWidget):
         num_inference_steps = 50
 
         run(song_name=songName, artist_name=artistName,
-            model_id=model_id, num_inference_steps=num_inference_steps)
+            model_id=model_id, num_inference_steps=num_inference_steps, loading_bar=self.loading_bar, textbox_verse=self.textbox_verse)
 
 
 class LyricsGeneratorApp(QtWidgets.QMainWindow):
