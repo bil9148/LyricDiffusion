@@ -28,9 +28,17 @@ class LyricsGeneratorWidget(QtWidgets.QWidget):
         self.label_modelList = QtWidgets.QLabel("Model:")
         self.label_modelList.setFont(self.getFont())
 
+        # Number of inference steps
+        self.label_numInferenceSteps = QtWidgets.QLabel("Num inference steps:")
+        self.label_numInferenceSteps.setFont(self.getFont())
+
+        self.textbox_numInferenceSteps = QtWidgets.QLineEdit()
+        self.textbox_numInferenceSteps.setFont(self.getFont())
+        self.textbox_numInferenceSteps.setText("50")
+
        # Verse that's being generated
-        self.label_verse = QtWidgets.QLabel("Info:")
-        self.label_verse.setFont(self.getFont())
+        self.label_info = QtWidgets.QLabel("Info:")
+        self.label_info.setFont(self.getFont())
 
         self.textbox_info = QtWidgets.QLineEdit()
         self.textbox_info.setFont(self.getFont())
@@ -47,8 +55,8 @@ class LyricsGeneratorWidget(QtWidgets.QWidget):
             QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
 
         self.modelList = QtWidgets.QComboBox()
-        self.modelList.addItem("stabilityai/sdxl-turbo")
         self.modelList.addItem("stabilityai/stable-diffusion-2-1")
+        self.modelList.addItem("stabilityai/sdxl-turbo")
         self.modelList.addItem("SG161222/Realistic_Vision_V2.0")
         self.modelList.addItem("SG161222/Realistic_Vision_V6.0_B1_noVAE")
         self.modelList.addItem("Lykon/DreamShaper")
@@ -67,11 +75,13 @@ class LyricsGeneratorWidget(QtWidgets.QWidget):
         self.layout.addWidget(self.textbox_artistName, 1, 1)
         self.layout.addWidget(self.label_modelList, 2, 0)
         self.layout.addWidget(self.modelList, 2, 1)
-        self.layout.addWidget(self.label_verse, 3, 0)
-        self.layout.addWidget(self.textbox_info, 3, 1)
+        self.layout.addWidget(self.label_numInferenceSteps, 3, 0)
+        self.layout.addWidget(self.textbox_numInferenceSteps, 3, 1)
+        self.layout.addWidget(self.label_info, 4, 0)
+        self.layout.addWidget(self.textbox_info, 4, 1)
         # Adjust the column span to -1
-        self.layout.addWidget(self.loading_bar, 4, 0, 1, -1)
-        self.layout.addWidget(self.button_generate, 5, 1)
+        self.layout.addWidget(self.loading_bar, 5, 0, 1, -1)
+        self.layout.addWidget(self.button_generate, 6, 0, 1, -1)
 
         self.setLayout(self.layout)
 
@@ -80,7 +90,13 @@ class LyricsGeneratorWidget(QtWidgets.QWidget):
         artistName = self.textbox_artistName.text()
 
         model_id = self.modelList.currentText()
-        num_inference_steps = 50
+        num_inference_steps = int(self.textbox_numInferenceSteps.text())
+
+        # Validate the input
+        assert songName and len(songName) > 0, "Song name cannot be empty"
+        assert artistName and len(
+            artistName) > 0, "Artist name cannot be empty"
+        assert num_inference_steps and num_inference_steps > 0 and num_inference_steps < 100, "Number of inference steps must be between 1 and 100"
 
         run(song_name=songName, artist_name=artistName,
             model_id=model_id, num_inference_steps=num_inference_steps, uiWidget=self)
