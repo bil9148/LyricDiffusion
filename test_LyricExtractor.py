@@ -5,7 +5,6 @@ from lyricExtractor import getLyrics
 
 class TestGetLyrics(unittest.TestCase):
 
-    # Replace with the correct path to your Genius class
     @patch("lyricExtractor.Genius")
     def test_get_lyrics_successful(self, mock_genius):
         # Set up mock Genius instance
@@ -21,7 +20,6 @@ class TestGetLyrics(unittest.TestCase):
         genius_instance.search_song.assert_called_once_with(
             "ExampleSong", "ExampleArtist")
 
-    # Replace with the correct path to your Genius class
     @patch("lyricExtractor.Genius")
     def test_get_lyrics_song_not_found(self, mock_genius):
         # Set up mock Genius instance
