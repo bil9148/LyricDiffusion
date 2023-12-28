@@ -19,7 +19,7 @@ class TestLyrics2Images(unittest.TestCase):
 
         # Act
         lyrics2images = Lyrics2Images(use_auth_token=False)
-        lyrics2images.runL2I(verses, output_path)
+        lyrics2images.run(verses, output_path)
 
         # Assert
         # You can add more assertions based on the expected behavior
