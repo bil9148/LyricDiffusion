@@ -19,10 +19,7 @@ class TestLyrics2Images(unittest.TestCase):
 
         # Act
         lyrics2images = Lyrics2Images(use_auth_token=False)
-        lyrics2images.run(verses, output_path)
-
-        # Assert
-        # You can add more assertions based on the expected behavior
+        lyrics2images.generate(verses, output_path)
 
         # Check if output files were created
         for i in range(len(verses)):
