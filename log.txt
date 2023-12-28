@@ -1,4 +1,0 @@
-2023-12-28 15:09:30,875 - INFO - Skipping verse: [Verse 1]
-2023-12-28 15:09:30,876 - INFO - Verse: Hello, it's me
-2023-12-28 15:09:43,082 - INFO - Verse: I was wondering if, after all these years, you'd like to meet
-2023-12-28 15:09:54,223 - INFO - Verse: To go over everything
