@@ -28,13 +28,23 @@ class LyricsGeneratorWidget(QtWidgets.QWidget):
         self.label_modelList = QtWidgets.QLabel("Model:")
         self.label_modelList.setFont(self.getFont())
 
-       # Verse that's being generated
+       # TODO - Verse that's being generated
         self.label_verse = QtWidgets.QLabel("Verse:")
         self.label_verse.setFont(self.getFont())
 
         self.textbox_verse = QtWidgets.QLineEdit()
         self.textbox_verse.setFont(self.getFont())
         self.textbox_verse.setReadOnly(True)
+
+        # TODO - Loading bar
+        self.loading_bar = QtWidgets.QProgressBar()
+        self.loading_bar.setFont(self.getFont())
+        self.loading_bar.setMinimum(0)
+        self.loading_bar.setMaximum(100)
+        self.loading_bar.setValue(0)
+        # Set width to 100% of the parent
+        self.loading_bar.setSizePolicy(
+            QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
 
         self.modelList = QtWidgets.QComboBox()
         self.modelList.addItem("stabilityai/sdxl-turbo")
@@ -48,9 +58,6 @@ class LyricsGeneratorWidget(QtWidgets.QWidget):
         self.button_generate = QtWidgets.QPushButton("Generate")
         self.button_generate.setFont(self.getFont())
 
-        songName = self.textbox_songName.text()
-        artistName = self.textbox_artistName.text()
-
         self.button_generate.clicked.connect(self.generate)
 
         self.layout = QtWidgets.QGridLayout()
@@ -62,7 +69,9 @@ class LyricsGeneratorWidget(QtWidgets.QWidget):
         self.layout.addWidget(self.modelList, 2, 1)
         self.layout.addWidget(self.label_verse, 3, 0)
         self.layout.addWidget(self.textbox_verse, 3, 1)
-        self.layout.addWidget(self.button_generate, 4, 1)
+        # Adjust the column span to -1
+        self.layout.addWidget(self.loading_bar, 4, 0, 1, -1)
+        self.layout.addWidget(self.button_generate, 5, 1)
 
         self.setLayout(self.layout)
 
