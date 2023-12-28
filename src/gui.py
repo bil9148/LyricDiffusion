@@ -28,17 +28,20 @@ class LyricsGeneratorWidget(QtWidgets.QWidget):
         self.label_modelList = QtWidgets.QLabel("Model:")
         self.label_modelList.setFont(self.getFont())
 
-       # TODO - Verse that's being generated
-        self.label_verse = QtWidgets.QLabel("Verse:")
+       # Verse that's being generated
+        self.label_verse = QtWidgets.QLabel("Info:")
         self.label_verse.setFont(self.getFont())
 
-        self.textbox_verse = QtWidgets.QLineEdit()
-        self.textbox_verse.setFont(self.getFont())
-        self.textbox_verse.setReadOnly(True)
+        self.textbox_info = QtWidgets.QLineEdit()
+        self.textbox_info.setFont(self.getFont())
+        self.textbox_info.setReadOnly(True)
 
-        # TODO - Loading bar
+        # Loading bar
         self.loading_bar = QtWidgets.QProgressBar()
         self.loading_bar.setFont(self.getFont())
+        self.loading_bar.setMinimum(0)
+        self.loading_bar.setValue(0)
+
         # Set width to 100% of the parent
         self.loading_bar.setSizePolicy(
             QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
@@ -65,7 +68,7 @@ class LyricsGeneratorWidget(QtWidgets.QWidget):
         self.layout.addWidget(self.label_modelList, 2, 0)
         self.layout.addWidget(self.modelList, 2, 1)
         self.layout.addWidget(self.label_verse, 3, 0)
-        self.layout.addWidget(self.textbox_verse, 3, 1)
+        self.layout.addWidget(self.textbox_info, 3, 1)
         # Adjust the column span to -1
         self.layout.addWidget(self.loading_bar, 4, 0, 1, -1)
         self.layout.addWidget(self.button_generate, 5, 1)
@@ -80,7 +83,7 @@ class LyricsGeneratorWidget(QtWidgets.QWidget):
         num_inference_steps = 50
 
         run(song_name=songName, artist_name=artistName,
-            model_id=model_id, num_inference_steps=num_inference_steps, loading_bar=self.loading_bar, textbox_verse=self.textbox_verse)
+            model_id=model_id, num_inference_steps=num_inference_steps, loading_bar=self.loading_bar, textbox_info=self.textbox_info)
 
 
 class LyricsGeneratorApp(QtWidgets.QMainWindow):
