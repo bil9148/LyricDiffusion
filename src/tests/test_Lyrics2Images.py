@@ -21,7 +21,7 @@ class TestLyrics2Images(unittest.TestCase):
 
         # Act
         lyrics2images = Lyrics2Images(use_auth_token=False)
-        lyrics2images.generate(verses, output_path)
+        lyrics2images.generate(verses, output_path, None, None)
 
         # Check if output files were created
         for i in range(len(verses)):
