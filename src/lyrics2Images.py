@@ -1,12 +1,15 @@
 import os
 from tqdm import tqdm
 from utils import auth_hugging_face
-import traceback
 import torch
 from torch import autocast
 from diffusers import StableDiffusionPipeline
 from diffusers import AutoPipelineForText2Image
 import logging
+import lyrics2Images
+import traceback
+from lyricExtractor import getLyrics
+from output import OUTPUT_PATH
 
 
 class Lyrics2Images:
@@ -59,16 +62,46 @@ class Lyrics2Images:
             logging.error(
                 f"Error in process_verse(): {e}.\nStack trace: {traceback.format_exc()}")
 
-    def run(self, verses: list[str], output_path: str):
+    def generate(self, verses: list[str], output_path: str):
         """Runs the model on the given verses and saves the images to the output path"""
         # Load the model pipeline
         pipe = self.load_auto_pipeline()
-
-        # Create the output folder if it doesn't exist
-        if not os.path.exists(output_path):
-            os.mkdir(output_path)
 
         # Run the model on each verse
         with autocast("cuda"):
             for i, verse in enumerate(tqdm(verses)):
                 self.process_verse(verse, output_path, i, pipe)
+
+
+def run(song_name, artist_name, model_id, num_inference_steps):
+    """Runs the program"""
+    try:
+        # Validate the input
+        assert song_name and len(song_name) > 0, "Song name cannot be empty"
+        assert artist_name and len(
+            artist_name) > 0, "Artist name cannot be empty"
+
+        # Get the lyrics
+        verses = getLyrics(song_name, artist_name)
+
+        assert verses and len(verses) > 0, "No lyrics found"
+
+        l2i = lyrics2Images.Lyrics2Images(
+            num_inference_steps=num_inference_steps,
+            use_auth_token=False,
+            model_id=model_id,
+            variant="fp16"
+        )
+
+        output_path = os.path.join(
+            OUTPUT_PATH, "images", f"{song_name} - {artist_name}")
+
+        # Create the output directory
+        os.makedirs(output_path, exist_ok=True)
+
+        # Run the model
+        l2i.generate(verses=verses, output_path=output_path)
+
+    except Exception as e:
+        logging.error(
+            f"Error in run(): {e}.\nStack trace: {traceback.format_exc()}")

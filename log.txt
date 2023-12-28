@@ -1,0 +1,7 @@
+2023-12-28 14:46:41,939 - INFO - Skipping verse: [Recording Info]
+2023-12-28 14:46:41,940 - INFO - Skipping verse: 
+2023-12-28 14:46:41,940 - INFO - Skipping verse: [Verse 1: Coolio]
+2023-12-28 14:46:41,940 - INFO - Verse: As I walk through the valley of the shadow of death
+2023-12-28 14:46:56,114 - INFO - Verse: I take a look at my life and realize there's nothin' left
+2023-12-28 14:47:09,828 - INFO - Verse: 'Cause I've been blastin' and laughin' so long that
+2023-12-28 14:47:23,562 - INFO - Verse: Even my momma thinks that my mind is gone
