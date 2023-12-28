@@ -95,11 +95,6 @@ class Lyrics2Images:
 def run(song_name, artist_name, model_id, num_inference_steps, uiWidget):
     """Runs the program"""
     try:
-        # Validate the input
-        assert song_name and len(song_name) > 0, "Song name cannot be empty"
-        assert artist_name and len(
-            artist_name) > 0, "Artist name cannot be empty"
-
         # Get the lyrics
         verses = getLyrics(song_name, artist_name)
 
