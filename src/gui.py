@@ -71,12 +71,11 @@ class LyricsGeneratorWidget(QtWidgets.QWidget):
         model_list.addItem("stabilityai/stable-diffusion-2-1")
         model_list.addItem("DGSpitzer/Cyberpunk-Anime-Diffusion")
         # Generates black images
-        model_list.addItem("stabilityai/sdxl-turbo")
-        # Doesn't work - no such modeling files are available
+        # model_list.addItem("dataautogpt3/OpenDalleV1.1")
+        # model_list.addItem("stabilityai/sdxl-turbo")
+        # Don't work - no such modeling files are available
         # self.modelList.addItem("SG161222/Realistic_Vision_V2.0")
-        # Doesn't work - no such modeling files are available
         # self.modelList.addItem("SG161222/Realistic_Vision_V6.0_B1_noVAE")
-        # Doesn't work - no such modeling files are available
         # self.modelList.addItem("Lykon/DreamShaper")
         model_list.setFont(self.getFont())
         return model_list
