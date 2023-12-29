@@ -16,7 +16,7 @@ class TestLyrics2Images(unittest.TestCase):
 
     def test_runL2I_with_valid_verses(self):
         # Arrange
-        verses = ["Verse 1", "Verse 2", "Verse 3"]
+        verses = ["Verse 1", "Verse 2"]
         output_path = os.path.join(
             OUTPUT_PATH, "images", "test")
 

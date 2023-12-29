@@ -58,8 +58,8 @@ class Lyrics2Images:
             image = result['images'][0]
             image.save(os.path.join(output_path, f"{index}.png"))
         except Exception as e:
-            logging.error(
-                f"Error in process_verse(): Verse: {verse}\n Exception: {e}.\nStack trace: {traceback.format_exc()}")
+            raise Exception(
+                f"Error in process_verse(): {e}.\nStack trace: {traceback.format_exc()}") from e
 
     def generate(self, verses: list[str], output_path: str, uiWidget):
         """Runs the model on the given verses and saves the images to the output path"""
@@ -117,5 +117,5 @@ def run(song_name, artist_name, model_id, num_inference_steps, uiWidget):
         l2i.generate(verses=verses, output_path=output_path, uiWidget=uiWidget)
 
     except Exception as e:
-        logging.error(
-            f"Error in run(): {e}.\nStack trace: {traceback.format_exc()}")
+        raise Exception(
+            f"Error in run(): {e}.\nStack trace: {traceback.format_exc()}") from e
