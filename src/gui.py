@@ -107,15 +107,14 @@ class LyricsGeneratorWidget(QtWidgets.QWidget):
             lyrics2Images.run(song_name=songName, artist_name=artistName,
                             model_id=model_id, num_inference_steps=num_inference_steps, uiWidget=self)
         except Exception as e:
-            #Display alert
-            self.HandleError(e)
+            self.HandleError(e.message)
             self.loading_bar.setValue(0)
 
-    def HandleError(self, e, silent=False):
-        if not silent:
-            logging.error(e)
+    def HandleError(self, message, silent=False):
+        logging.error(message)
         
-        self.MsgBox(e)
+        if not silent:
+            self.MsgBox(message)
 
     def MsgBox(self, e):
         msg = QtWidgets.QMessageBox()

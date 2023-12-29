@@ -3,7 +3,7 @@ from tqdm import tqdm
 from utils import auth_hugging_face
 import torch
 from torch import autocast
-from diffusers import StableDiffusionPipeline
+#from diffusers import StableDiffusionPipeline
 from diffusers import AutoPipelineForText2Image
 import logging
 import lyrics2Images
@@ -33,14 +33,15 @@ class Lyrics2Images:
             auth_hugging_face()
 
     def load_model_pipeline(self) -> AutoPipelineForText2Image:
-        return StableDiffusionPipeline.from_pretrained(self.model_id,
-                                                       variant=self.variant,
-                                                       torch_dtype=self.torch_dtype,
-                                                       use_auth_token=self.use_auth_token).to("cuda")
+        pass
+        # return StableDiffusionPipeline.from_pretrained(self.model_id,
+        #                                                variant=self.variant,
+        #                                                torch_dtype=self.torch_dtype,
+        #                                                use_auth_token=self.use_auth_token).to("cuda")
 
     def load_auto_pipeline(self) -> AutoPipelineForText2Image:
         return AutoPipelineForText2Image.from_pretrained(
-            self.model_id, torch_dtype=self.torch_dtype, variant=self.variant, use_auth_token=self.use_auth_token).to("cuda")
+            self.model_id, torch_dtype=self.torch_dtype, variant=self.variant).to("cuda")
 
     def process_verse(self, verse: str, output_path: str, index: int, pipe: AutoPipelineForText2Image):
         try:
