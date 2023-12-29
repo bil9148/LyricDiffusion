@@ -1,6 +1,5 @@
 from ..lyrics2Images import Lyrics2Images
 import unittest
-import tempfile
 import shutil
 import os
 from output import OUTPUT_PATH
@@ -8,11 +7,11 @@ from output import OUTPUT_PATH
 
 class TestLyrics2Images(unittest.TestCase):
     def setUp(self):
-        self.temp_dir = tempfile.mkdtemp()
+        self.temp_dir = os.path.join(OUTPUT_PATH, "images", "test")
+        os.makedirs(self.temp_dir, exist_ok=True)
 
     def tearDown(self):
-        shutil.rmtree(os.path.join(
-            OUTPUT_PATH, "images", "test"))
+        shutil.rmtree(self.temp_dir)
 
     def test_runL2I_with_valid_verses(self):
         # Arrange

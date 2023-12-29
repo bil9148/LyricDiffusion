@@ -103,9 +103,10 @@ def run(song_name, artist_name, model_id, num_inference_steps, uiWidget):
 
         l2i = lyrics2Images.Lyrics2Images(
             num_inference_steps=num_inference_steps,
+            torch_dtype=torch.float16,
+            variant="fp16",
             use_auth_token=False,
             model_id=model_id,
-            variant="fp16"
         )
 
         output_path = os.path.join(
