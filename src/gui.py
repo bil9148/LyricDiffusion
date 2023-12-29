@@ -71,7 +71,7 @@ class LyricsGeneratorWidget(QtWidgets.QWidget):
         model_list.addItem("stabilityai/stable-diffusion-2-1")
         model_list.addItem("DGSpitzer/Cyberpunk-Anime-Diffusion")
         # Generates black images
-        # self.modelList.addItem("stabilityai/sdxl-turbo")
+        model_list.addItem("stabilityai/sdxl-turbo")
         # Doesn't work - no such modeling files are available
         # self.modelList.addItem("SG161222/Realistic_Vision_V2.0")
         # Doesn't work - no such modeling files are available
@@ -107,7 +107,8 @@ class LyricsGeneratorWidget(QtWidgets.QWidget):
             lyrics2Images.run(song_name=songName, artist_name=artistName,
                             model_id=model_id, num_inference_steps=num_inference_steps, uiWidget=self)
         except Exception as e:
-            self.HandleError(e.message)
+            message = e.args[0] if len(e.args) > 0 else str(e)
+            self.HandleError(message)
             self.loading_bar.setValue(0)
 
     def HandleError(self, message, silent=False):
