@@ -22,6 +22,16 @@ class BasicUI:
             BasicUI.MsgBox(exception)
                 
     @staticmethod
+    def AskYesNo(text):
+        msg = QtWidgets.QMessageBox()
+        msg.setIcon(QtWidgets.QMessageBox.Question)
+        msg.setText(text)
+        msg.setWindowTitle("Lyrics2Images")
+        msg.setStandardButtons(
+            QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
+        return msg.exec_() == QtWidgets.QMessageBox.Yes
+    
+    @staticmethod
     def MsgBox(e):
         msg = QtWidgets.QMessageBox()
         msg.setIcon(QtWidgets.QMessageBox.Critical)
