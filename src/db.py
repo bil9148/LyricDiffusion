@@ -76,18 +76,24 @@ class Database:
             self.connect()
 
     def setupAppDatabase(self):
+        self.setupDatabase("lyrics2images")
+
+    def setupTestingDatabase(self):
+        self.setupDatabase("testing_db42069")
+
+    def setupDatabase(self, databaseName):
         try:
             self.database = "postgres"
 
             # Check if lyrics2images database exists
-            result = self.fetch_one("SELECT 1 FROM pg_database WHERE datname = %s", ("lyrics2images",))
+            result = self.fetch_one("SELECT 1 FROM pg_database WHERE datname = %s", (databaseName,))
 
             if result is None: 
                 # Create lyrics2images database
-                self.execute("CREATE DATABASE lyrics2images")
+                self.execute(f"CREATE DATABASE {databaseName}")
 
             # Create tables
-            self.database = "lyrics2images"
+            self.database = databaseName
 
             self.execute("CREATE TABLE IF NOT EXISTS settings (id SERIAL PRIMARY KEY, name VARCHAR(255) NOT NULL UNIQUE, value VARCHAR(255) NOT NULL)")
             

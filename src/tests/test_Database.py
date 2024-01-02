@@ -8,21 +8,7 @@ class TestDatabase(unittest.TestCase):
         self.database = Database(
             host="127.0.0.1", port="5432", user="postgres", password="sqlpostgres", database="postgres")
 
-        self.database.connect()
-
-        # Check if testing_db exists
-        result = self.database.fetch_one(
-            f"SELECT 1 FROM pg_database WHERE datname = '{self.testing_DB_name}'")
-
-        if not result:
-            # Drop testing_db if it exists
-            self.database.execute(
-                f"DROP DATABASE IF EXISTS {self.testing_DB_name}")
-            # Create testing_db
-            self.database.execute(f"CREATE DATABASE {self.testing_DB_name}")
-
-        # Connect to testing_db
-        self.database.database = self.testing_DB_name
+        self.database.setupTestingDatabase()
 
     def tearDown(self):
         # Drop testing_db
@@ -55,13 +41,15 @@ class TestDatabase(unittest.TestCase):
         self.database.disconnect()
         self.assertIsNone(self.database.conn, "Connection should be closed")
 
-    def test_setupAppDatabase(self):
+    def test_setupDatabase(self):
         # Check if lyrics2images database exists
-        self.database.setupAppDatabase()
+        self.database.setupDatabase("testing_db42069")
 
-        result = self.database.fetch_one("SELECT 1 FROM pg_database WHERE datname = 'lyrics2images'")
+        result = self.database.fetch_one(
+            "SELECT 1 FROM pg_database WHERE datname = 'testing_db42069'")
 
-        self.assertIsNotNone(result, "lyrics2images database should exist")
+        self.assertIsNotNone(
+            result, "testing_db42069 database should exist")
 
     def test_createTable(self):
         self.database.execute("drop table if exists test_table")
