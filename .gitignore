@@ -11,6 +11,10 @@ __pycache__/
 build/
 develop-eggs/
 dist/
+main.build/
+main.dist/
+main.onefile-build/
+*.exe
 downloads/
 eggs/
 .eggs/
