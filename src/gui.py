@@ -3,10 +3,17 @@ from PySide6 import QtCore, QtWidgets, QtGui
 import lyrics2Images
 import logging
 
-class LyricsGeneratorWidget(QtWidgets.QWidget):
-    def getFont(self) -> QtGui.QFont:
-        return QtGui.QFont("Arial", 14)
+class FontManager:
+    def __init__(self):
+        self.font = QtGui.QFont("Arial", 14)
 
+    def getFont(self) -> QtGui.QFont:
+        return self.font
+
+class SettingsWidget(QtWidgets.QWidget):
+    pass
+
+class LyricsGeneratorWidget(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
 
@@ -48,18 +55,18 @@ class LyricsGeneratorWidget(QtWidgets.QWidget):
 
     def create_label(self, text):
         label = QtWidgets.QLabel(text)
-        label.setFont(self.getFont())
+        label.setFont(FontManager.getFont())
         return label
 
     def create_textbox(self, read_only=False):
         textbox = QtWidgets.QLineEdit()
-        textbox.setFont(self.getFont())
+        textbox.setFont(FontManager.getFont())
         textbox.setReadOnly(read_only)
         return textbox
 
     def create_progress_bar(self):
         progress_bar = QtWidgets.QProgressBar()
-        progress_bar.setFont(self.getFont())
+        progress_bar.setFont(FontManager.getFont())
         progress_bar.setMinimum(0)
         progress_bar.setValue(0)
         progress_bar.setSizePolicy(
@@ -77,12 +84,12 @@ class LyricsGeneratorWidget(QtWidgets.QWidget):
         # self.modelList.addItem("SG161222/Realistic_Vision_V2.0")
         # self.modelList.addItem("SG161222/Realistic_Vision_V6.0_B1_noVAE")
         # self.modelList.addItem("Lykon/DreamShaper")
-        model_list.setFont(self.getFont())
+        model_list.setFont(FontManager.getFont())
         return model_list
 
     def create_button(self, text):
         button = QtWidgets.QPushButton(text)
-        button.setFont(self.getFont())
+        button.setFont(FontManager.getFont())
         return button
 
     def generate(self):
