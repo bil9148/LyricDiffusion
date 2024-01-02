@@ -89,9 +89,9 @@ class Database:
             # Create tables
             self.database = "lyrics2images"
 
-            self.execute("CREATE TABLE IF NOT EXISTS configuration (id SERIAL PRIMARY KEY, name VARCHAR(255) NOT NULL UNIQUE)")
+            self.execute("CREATE TABLE IF NOT EXISTS settings (id SERIAL PRIMARY KEY, name VARCHAR(255) NOT NULL UNIQUE, value VARCHAR(255) NOT NULL)")
             
         except psycopg2.Error as e:
             BasicUI.HandleError(e)
 
-database = Database("localhost", 5432, "postgres", "sqlpostgres", "postgres")
+DATABASE = Database("localhost", 5432, "postgres", "sqlpostgres", "postgres")

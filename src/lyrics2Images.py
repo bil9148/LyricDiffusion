@@ -5,11 +5,10 @@ import torch
 from torch import autocast
 #from diffusers import StableDiffusionPipeline
 from diffusers import AutoPipelineForText2Image
-import logging
 import lyrics2Images
 import traceback
 from lyricExtractor import getLyrics
-from output import output_Path
+import output
 from PySide6 import QtWidgets
 
 
@@ -47,7 +46,7 @@ class Lyrics2Images:
         try:
             # Skip empty verses
             if len(verse) == 0 or (verse.startswith("[") and verse.endswith("]")):
-                logging.info(f"Skipping verse: {verse}")
+                output.logging.info(f"Skipping verse: {verse}")
                 return
 
             result = pipe(
@@ -110,9 +109,9 @@ def run(song_name, artist_name, model_id, num_inference_steps, uiWidget):
         )
 
         output_path = os.path.join(
-            output_Path, "images", f"{song_name} - {artist_name}")
+            output.OutputPath.getOutputPath(), "images", f"{song_name} - {artist_name}")
 
-        logging.info(
+        output.logging.info(
             f"Starting generation for {song_name} - {artist_name}.\nModel: {model_id}.\nOutput path: {output_path}\nTorch dtype: {l2i.torch_dtype}\nVariant: {l2i.variant}\nNum inference steps: {l2i.num_inference_steps}")
 
         # Run the model

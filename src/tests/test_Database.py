@@ -63,6 +63,25 @@ class TestDatabase(unittest.TestCase):
 
         self.assertIsNotNone(result, "lyrics2images database should exist")
 
+    def test_createTable(self):
+        self.database.execute("drop table if exists test_table")
+
+        self.database.execute("create table test_table (id SERIAL PRIMARY KEY, name VARCHAR(255) NOT NULL UNIQUE)")
+
+        result = self.database.fetch_one("SELECT 1 FROM pg_tables WHERE tablename = 'test_table'")
+
+        self.assertIsNotNone(result, "test_table should exist")
+
+    def test_insert(self):
+        self.database.execute("drop table if exists test_table")
+        
+        self.database.execute("create table test_table (id SERIAL PRIMARY KEY, name VARCHAR(255) NOT NULL UNIQUE)")
+
+        self.database.execute("insert into test_table (name) values (%s)", ("test",))
+
+        result = self.database.fetch_one("select * from test_table where name = %s", ("test",))
+
+        self.assertIsNotNone(result, "test_table should contain the inserted row")
 
 if __name__ == "__main__":
     unittest.main()

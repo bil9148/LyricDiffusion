@@ -4,7 +4,6 @@ from PySide6 import QtCore, QtWidgets, QtGui
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QWidget
 import lyrics2Images
-import logging
 import output
 
 class FontManager:
@@ -16,7 +15,7 @@ class FontManager:
 class BasicUI:
     @staticmethod
     def HandleError(exception:Exception, silent=False):
-        logging.error(exception,exc_info=True)
+        output.logging.error(exception, exc_info=True)
 
         # If not silent and UI is available, show error message
         if not silent and QtWidgets.QApplication.instance():
@@ -78,7 +77,7 @@ class SettingsWidget(QtWidgets.QWidget):
 
         # Create widgets and set common font
         self.label_outputPath = BasicUI.create_label("Output path:")
-        self.textbox_outputPath = BasicUI.create_textbox(read_only=True,text=output.output_Path)
+        self.textbox_outputPath = BasicUI.create_textbox(read_only=True,text=output.OutputPath.getOutputPath())
         self.button_browseOutputPath = BasicUI.create_button("Browse")
 
         # Connect button signal
@@ -98,9 +97,11 @@ class SettingsWidget(QtWidgets.QWidget):
         temp = QtWidgets.QFileDialog.getExistingDirectory(
             self, "Select output path")
         
+        output.logging.info(f"Output path changed to: {temp}")
+
         if temp:
-            output.output_Path = temp
-            self.textbox_outputPath.setText(output.output_Path)        
+            output.OutputPath.setOutputPath(temp)
+            self.textbox_outputPath.setText(output.OutputPath.getOutputPath())            
 
 
 class LyricsGeneratorWidget(QtWidgets.QWidget):
