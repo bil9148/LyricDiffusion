@@ -12,7 +12,6 @@ def get_output_path():
 
 OUTPUT_PATH = get_output_path()
 
-
 def configure_logging():
 
     logFilePath = os.path.join(OUTPUT_PATH, "log.txt")
