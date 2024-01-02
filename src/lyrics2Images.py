@@ -42,10 +42,10 @@ class Lyrics2Images:
         return AutoPipelineForText2Image.from_pretrained(
             self.model_id, torch_dtype=self.torch_dtype, variant=self.variant).to("cuda")
 
-    def process_verse(self, verse: str, output_path: str, index: int, pipe: AutoPipelineForText2Image):
+    def process_verse(self, verse: str, output_path: str, index: int, pipe: AutoPipelineForText2Image, skip_empty_verses):
         try:
             # Skip empty verses
-            if len(verse) == 0 or (verse.startswith("[") and verse.endswith("]")):
+            if skip_empty_verses and (len(verse) == 0 or (verse.startswith("[") and verse.endswith("]")) or (verse.startswith("{") and verse.endswith("}"))):
                 settings.logging.info(f"Skipping verse: {verse}")
                 return
 
@@ -73,6 +73,8 @@ class Lyrics2Images:
             uiWidget.loading_bar.setMaximum(len(verses))
             uiWidget.loading_bar.setValue(0)
 
+        skip_empty_verses = settings.SkipEmptyVerses.getSkipEmptyVerses()
+
         # Run the model on each verse
         with autocast("cuda"):
             for i, verse in enumerate(tqdm(verses)):
@@ -84,7 +86,7 @@ class Lyrics2Images:
                 # Force UI update
                 QtWidgets.QApplication.processEvents()
 
-                self.process_verse(verse, output_path, i, pipe)
+                self.process_verse(verse, output_path, i, pipe, skip_empty_verses)
 
         # Update the UI
         if uiWidget is not None:
