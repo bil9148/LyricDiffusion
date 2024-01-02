@@ -3,13 +3,13 @@ from tqdm import tqdm
 from utils import auth_hugging_face
 import torch
 from torch import autocast
-#from diffusers import StableDiffusionPipeline
+# from diffusers import StableDiffusionPipeline
 from diffusers import AutoPipelineForText2Image
 import lyrics2Images
-import traceback
 from lyricExtractor import getLyrics
 import settings as settings
 from PySide6 import QtWidgets
+import gui
 
 
 class Lyrics2Images:
@@ -42,10 +42,13 @@ class Lyrics2Images:
         return AutoPipelineForText2Image.from_pretrained(
             self.model_id, torch_dtype=self.torch_dtype, variant=self.variant).to("cuda")
 
+    def should_skip_verse(self, verse: str) -> bool:
+        return len(verse) == 0 or "[" in verse or "]" in verse or "(" in verse or ")" in verse or "{" in verse or "}" in verse
+
     def process_verse(self, verse: str, output_path: str, index: int, pipe: AutoPipelineForText2Image, skip_empty_verses):
         try:
             # Skip empty verses
-            if skip_empty_verses and (len(verse) == 0 or (verse.startswith("[") and verse.endswith("]")) or (verse.startswith("{") and verse.endswith("}"))):
+            if skip_empty_verses and self.should_skip_verse(verse):
                 settings.logging.info(f"Skipping verse: {verse}")
                 return
 
@@ -58,8 +61,7 @@ class Lyrics2Images:
             image = result['images'][0]
             image.save(os.path.join(output_path, f"{index}.png"))
         except Exception as e:
-            raise Exception(
-                f"Error in process_verse(): {e}.\nStack trace: {traceback.format_exc()}") from e
+            gui.BasicUI.HandleError(e)
 
     def generate(self, verses: list[str], output_path: str, uiWidget):
         """Runs the model on the given verses and saves the images to the output path"""
@@ -86,7 +88,8 @@ class Lyrics2Images:
                 # Force UI update
                 QtWidgets.QApplication.processEvents()
 
-                self.process_verse(verse, output_path, i, pipe, skip_empty_verses)
+                self.process_verse(verse, output_path, i,
+                                   pipe, skip_empty_verses)
 
         # Update the UI
         if uiWidget is not None:
@@ -98,9 +101,10 @@ def run(song_name, artist_name, model_id, num_inference_steps, uiWidget):
     """Runs the program"""
     try:
         # Get the lyrics
-        verses = getLyrics(song_name, artist_name)
+        verses = getLyrics(song_name, artist_name, askIfCorrect=True)
 
-        assert verses and len(verses) > 0, "No lyrics found"
+        if verses is None or len(verses) == 0:
+            return
 
         l2i = lyrics2Images.Lyrics2Images(
             num_inference_steps=num_inference_steps,
@@ -120,5 +124,4 @@ def run(song_name, artist_name, model_id, num_inference_steps, uiWidget):
         l2i.generate(verses=verses, output_path=output_path, uiWidget=uiWidget)
 
     except Exception as e:
-        raise Exception(
-            f"Error in run(): {e}.\nStack trace: {traceback.format_exc()}") from e
+        gui.BasicUI.HandleError(e)
