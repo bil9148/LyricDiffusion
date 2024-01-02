@@ -73,7 +73,7 @@ class Database:
         if self.conn is None or self.conn.closed != 0:
             self.connect()
 
-    def setupDatabase(self):
+    def setupAppDatabase(self):
         try:
             self.database = "postgres"
 

@@ -55,9 +55,9 @@ class TestDatabase(unittest.TestCase):
         self.database.disconnect()
         self.assertIsNone(self.database.conn, "Connection should be closed")
 
-    def test_setupDatabase(self):
+    def test_setupAppDatabase(self):
         # Check if lyrics2images database exists
-        self.database.setupDatabase()
+        self.database.setupAppDatabase()
 
         result = self.database.fetch_one("SELECT 1 FROM pg_database WHERE datname = 'lyrics2images'")
 
