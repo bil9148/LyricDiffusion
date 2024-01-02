@@ -2,12 +2,12 @@ from ..lyrics2Images import Lyrics2Images
 import unittest
 import shutil
 import os
-from output import OUTPUT_PATH
+from output import output_Path
 
 
 class TestLyrics2Images(unittest.TestCase):
     def setUp(self):
-        self.temp_dir = os.path.join(OUTPUT_PATH, "images", "test")
+        self.temp_dir = os.path.join(output_Path, "images", "test")
         os.makedirs(self.temp_dir, exist_ok=True)
 
     def tearDown(self):
@@ -17,7 +17,7 @@ class TestLyrics2Images(unittest.TestCase):
         # Arrange
         verses = ["Verse 1", "Verse 2"]
         output_path = os.path.join(
-            OUTPUT_PATH, "images", "test")
+            output_Path, "images", "test")
 
         # Act
         lyrics2images = Lyrics2Images(use_auth_token=False)

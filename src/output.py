@@ -10,11 +10,11 @@ def get_output_path():
     return output_path
 
 
-OUTPUT_PATH = get_output_path()
+output_Path = get_output_path()
 
 def configure_logging():
 
-    logFilePath = os.path.join(OUTPUT_PATH, "log.txt")
+    logFilePath = os.path.join(output_Path, "log.txt")
 
     open(logFilePath, "w")
 

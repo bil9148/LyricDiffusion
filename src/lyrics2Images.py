@@ -9,7 +9,7 @@ import logging
 import lyrics2Images
 import traceback
 from lyricExtractor import getLyrics
-from output import OUTPUT_PATH
+from output import output_Path
 from PySide6 import QtWidgets
 
 
@@ -110,7 +110,7 @@ def run(song_name, artist_name, model_id, num_inference_steps, uiWidget):
         )
 
         output_path = os.path.join(
-            OUTPUT_PATH, "images", f"{song_name} - {artist_name}")
+            output_Path, "images", f"{song_name} - {artist_name}")
 
         logging.info(
             f"Starting generation for {song_name} - {artist_name}.\nModel: {model_id}.\nOutput path: {output_path}\nTorch dtype: {l2i.torch_dtype}\nVariant: {l2i.variant}\nNum inference steps: {l2i.num_inference_steps}")
