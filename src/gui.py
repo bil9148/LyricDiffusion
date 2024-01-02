@@ -17,7 +17,7 @@ class BasicUI:
         logging.error(message)
         
         if not silent:
-            MsgBox(message)
+            BasicUI.MsgBox(message)
 
     @staticmethod
     def MsgBox(e):
