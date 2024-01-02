@@ -70,5 +70,24 @@ class Database:
 
     def check_connection(self):
         # If connection is not open, open it
-        if self.conn.closed != 0:
+        if self.conn is None or self.conn.closed != 0:
             self.connect()
+
+    def setupDatabase(self):
+        try:
+            self.database = "postgres"
+
+            # Check if lyrics2images database exists
+            result = self.fetch_one("SELECT 1 FROM pg_database WHERE datname = %s", ("lyrics2images",))
+
+            if result is None: 
+                # Create lyrics2images database
+                self.execute("CREATE DATABASE lyrics2images")
+
+            # Create tables
+            self.database = "lyrics2images"
+
+            self.execute("CREATE TABLE IF NOT EXISTS configuration (id SERIAL PRIMARY KEY, name VARCHAR(255) NOT NULL UNIQUE)")
+            
+        except psycopg2.Error as e:
+            BasicUI.HandleError(e)
