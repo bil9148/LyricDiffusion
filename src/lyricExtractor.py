@@ -1,5 +1,5 @@
 from lyricsgenius import Genius
-import output
+import settings as settings
 
 def getLyrics(songName: str, artistName: str):
     """Returns the lyrics of a song given the song name and artist name"""
@@ -22,6 +22,6 @@ def getLyrics(songName: str, artistName: str):
         return verses
 
     except Exception as e:
-        output.logging.error(
+        settings.logging.error(
             f"Error getting lyrics: {e}.\nStacktrace:{e.__traceback__}")
         return []
