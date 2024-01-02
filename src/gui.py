@@ -1,17 +1,40 @@
 import sys
+from typing import Optional
 from PySide6 import QtCore, QtWidgets, QtGui
+from PySide6.QtCore import Qt
+from PySide6.QtWidgets import QWidget
 import lyrics2Images
 import logging
 
 class FontManager:
-    def __init__(self):
-        self.font = QtGui.QFont("Arial", 14)
-
-    def getFont(self) -> QtGui.QFont:
-        return self.font
+    @staticmethod
+    def getFont() -> QtGui.QFont:
+        return QtGui.QFont("Arial", 14)
 
 class SettingsWidget(QtWidgets.QWidget):
-    pass
+    def __init__(self):
+        super().__init__()
+
+        # Create widgets and set common font
+        self.label_outputPath = self.create_label("Output path:")
+        self.textbox_outputPath = self.create_textbox()
+        self.button_browseOutputPath = self.create_button("Browse")
+
+        # Connect button signal
+        self.button_browseOutputPath.clicked.connect(self.browseOutputPath)
+
+        # Create layout and add widgets
+        self.layout = QtWidgets.QGridLayout()   
+
+        self.layout.addWidget(self.label_outputPath, 0, 0)
+
+        self.layout.addWidget(self.textbox_outputPath, 0, 1)
+        self.layout.addWidget(self.button_browseOutputPath, 0, 2)
+
+        self.setLayout(self.layout)
+
+
+
 
 class LyricsGeneratorWidget(QtWidgets.QWidget):
     def __init__(self):
@@ -30,7 +53,18 @@ class LyricsGeneratorWidget(QtWidgets.QWidget):
         self.label_info = self.create_label("Info:")
         self.textbox_info = self.create_textbox(read_only=True)
         self.loading_bar = self.create_progress_bar()
-        self.modelList = self.create_model_list()
+        #Item list:
+        # model_list.addItem("stabilityai/stable-diffusion-2-1")
+        # model_list.addItem("DGSpitzer/Cyberpunk-Anime-Diffusion")
+        # Generates black images
+        # model_list.addItem("dataautogpt3/OpenDalleV1.1")
+        # model_list.addItem("stabilityai/sdxl-turbo")
+        # Don't work - no such modeling files are available
+        # self.modelList.addItem("SG161222/Realistic_Vision_V2.0")
+        # self.modelList.addItem("SG161222/Realistic_Vision_V6.0_B1_noVAE")
+        # self.modelList.addItem("Lykon/DreamShaper")
+        itemList = ["stabilityai/stable-diffusion-2-1", "DGSpitzer/Cyberpunk-Anime-Diffusion"]
+        self.modelList = self.create_model_list(itemList=itemList)
         self.button_generate = self.create_button("Generate")
 
         # Connect button signal
@@ -73,17 +107,12 @@ class LyricsGeneratorWidget(QtWidgets.QWidget):
             QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
         return progress_bar
 
-    def create_model_list(self):
+    def create_model_list(self, itemList: Optional[list] = None):
         model_list = QtWidgets.QComboBox()
-        model_list.addItem("stabilityai/stable-diffusion-2-1")
-        model_list.addItem("DGSpitzer/Cyberpunk-Anime-Diffusion")
-        # Generates black images
-        # model_list.addItem("dataautogpt3/OpenDalleV1.1")
-        # model_list.addItem("stabilityai/sdxl-turbo")
-        # Don't work - no such modeling files are available
-        # self.modelList.addItem("SG161222/Realistic_Vision_V2.0")
-        # self.modelList.addItem("SG161222/Realistic_Vision_V6.0_B1_noVAE")
-        # self.modelList.addItem("Lykon/DreamShaper")
+
+        if itemList is not None:
+            model_list.addItems(itemList)
+
         model_list.setFont(FontManager.getFont())
         return model_list
 
