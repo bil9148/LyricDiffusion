@@ -4,18 +4,18 @@ from PySide6 import QtCore, QtWidgets, QtGui
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QWidget
 import lyrics2Images
-import output
+import settings as settings
 
 class FontManager:
     @staticmethod
     def getFont() -> QtGui.QFont:
-        return QtGui.QFont("Arial", 14)
+        return QtGui.QFont("Arial", 12)
 
 
 class BasicUI:
     @staticmethod
     def HandleError(exception:Exception, silent=False):
-        output.logging.error(exception, exc_info=True)
+        settings.logging.error(exception, exc_info=True)
 
         # If not silent and UI is available, show error message
         if not silent and QtWidgets.QApplication.instance():
@@ -35,6 +35,13 @@ class BasicUI:
         label = QtWidgets.QLabel(text)
         label.setFont(FontManager.getFont())
         return label
+
+    @staticmethod
+    def create_checkbox(text, checked=True):
+        checkbox = QtWidgets.QCheckBox(text)
+        checkbox.setChecked(checked)
+        checkbox.setFont(FontManager.getFont())
+        return checkbox
 
     @staticmethod
     def create_textbox(read_only=False,text=""):
@@ -77,8 +84,14 @@ class SettingsWidget(QtWidgets.QWidget):
 
         # Create widgets and set common font
         self.label_outputPath = BasicUI.create_label("Output path:")
-        self.textbox_outputPath = BasicUI.create_textbox(read_only=True,text=output.OutputPath.getOutputPath())
+        self.textbox_outputPath = BasicUI.create_textbox(read_only=True,text=settings.OutputPath.getOutputPath())
         self.button_browseOutputPath = BasicUI.create_button("Browse")
+
+        self.checkbox_skipEmptyVerses = BasicUI.create_checkbox(
+            "Skip empty verses", settings.SkipEmptyVerses.getSkipEmptyVerses())
+
+        # Connect checkbox signal
+        self.checkbox_skipEmptyVerses.stateChanged.connect(self.skipEmptyVersesChanged)
 
         # Connect button signal
         self.button_browseOutputPath.clicked.connect(self.browseOutputPath)
@@ -91,17 +104,23 @@ class SettingsWidget(QtWidgets.QWidget):
         self.layout.addWidget(self.textbox_outputPath, 0, 1)
         self.layout.addWidget(self.button_browseOutputPath, 0, 2)
 
+        self.layout.addWidget(self.checkbox_skipEmptyVerses, 1, 0, 1, -1)        
+
         self.setLayout(self.layout)
+
+    def skipEmptyVersesChanged(self):
+        settings.logging.info(f"Skip empty verses changed to: {self.checkbox_skipEmptyVerses.isChecked()}")
+        settings.SkipEmptyVerses.setSkipEmptyVerses(self.checkbox_skipEmptyVerses.isChecked())
 
     def browseOutputPath(self):    
         temp = QtWidgets.QFileDialog.getExistingDirectory(
             self, "Select output path")
         
-        output.logging.info(f"Output path changed to: {temp}")
-
         if temp:
-            output.OutputPath.setOutputPath(temp)
-            self.textbox_outputPath.setText(output.OutputPath.getOutputPath())            
+            settings.OutputPath.setOutputPath(temp)
+            temp= settings.OutputPath.getOutputPath()
+            self.textbox_outputPath.setText(temp)
+            settings.logging.info(f"Output path changed to: {temp}")
 
 
 class LyricsGeneratorWidget(QtWidgets.QWidget):
@@ -160,7 +179,7 @@ class LyricsGeneratorWidget(QtWidgets.QWidget):
         self.settingsWidget = SettingsWidget()
         self.settingsWidget.show()
 
-        self.settingsWidget.resize(600, 200)
+        self.settingsWidget.resize(600, 100)
         self.settingsWidget.setWindowTitle("Settings")
 
     def generate(self):
@@ -195,7 +214,7 @@ class LyricsGeneratorApp(QtWidgets.QMainWindow):
         self.central_widget = LyricsGeneratorWidget()
         self.setCentralWidget(self.central_widget)
 
-        self.resize(600, 400)
+        self.resize(600, 300)
         self.setWindowTitle("Lyrics2Images")
 
 

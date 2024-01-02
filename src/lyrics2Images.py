@@ -8,7 +8,7 @@ from diffusers import AutoPipelineForText2Image
 import lyrics2Images
 import traceback
 from lyricExtractor import getLyrics
-import output
+import settings as settings
 from PySide6 import QtWidgets
 
 
@@ -46,7 +46,7 @@ class Lyrics2Images:
         try:
             # Skip empty verses
             if len(verse) == 0 or (verse.startswith("[") and verse.endswith("]")):
-                output.logging.info(f"Skipping verse: {verse}")
+                settings.logging.info(f"Skipping verse: {verse}")
                 return
 
             result = pipe(
@@ -109,9 +109,9 @@ def run(song_name, artist_name, model_id, num_inference_steps, uiWidget):
         )
 
         output_path = os.path.join(
-            output.OutputPath.getOutputPath(), "images", f"{song_name} - {artist_name}")
+            settings.OutputPath.getOutputPath(), "images", f"{song_name} - {artist_name}")
 
-        output.logging.info(
+        settings.logging.info(
             f"Starting generation for {song_name} - {artist_name}.\nModel: {model_id}.\nOutput path: {output_path}\nTorch dtype: {l2i.torch_dtype}\nVariant: {l2i.variant}\nNum inference steps: {l2i.num_inference_steps}")
 
         # Run the model
