@@ -15,6 +15,7 @@ main.build/
 main.dist/
 main.onefile-build/
 *.exe
+*.cmd
 downloads/
 eggs/
 .eggs/
