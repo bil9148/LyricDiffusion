@@ -3,7 +3,7 @@ import gui
 import db
 
 def run():
-    db.database.setupAppDatabase()
+    db.DATABASE.setupAppDatabase()
     output.configure_logging()
     gui.showGUI()
 
