@@ -19,7 +19,7 @@ class Lyrics2Images:
                  variant: str = "fp16",
                  torch_dtype: torch.dtype = torch.float16,
                  prompt: str = "digital art",
-                 num_inference_steps: int = 50,
+                 num_inference_steps: int = 5,
                  use_auth_token: bool = False,
                  ):
         self.model_id = model_id
