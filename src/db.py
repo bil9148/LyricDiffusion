@@ -10,6 +10,8 @@ class Database:
         self.password = password
         self.database = database
 
+        self.conn = None
+
     def connect(self):
         try:
             self.conn = psycopg2.connect(
@@ -91,3 +93,5 @@ class Database:
             
         except psycopg2.Error as e:
             BasicUI.HandleError(e)
+
+database = Database("localhost", 5432, "postgres", "sqlpostgres", "postgres")
