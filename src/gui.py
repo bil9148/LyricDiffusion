@@ -15,12 +15,13 @@ class FontManager:
 
 class BasicUI:
     @staticmethod
-    def HandleError(exception, silent=False):
-        logging.error(exception)
+    def HandleError(exception:Exception, silent=False):
+        logging.error(exception,exc_info=True)
 
-        if not silent:
+        # If not silent and UI is available, show error message
+        if not silent and QtWidgets.QApplication.instance():
             BasicUI.MsgBox(exception)
-
+                
     @staticmethod
     def MsgBox(e):
         msg = QtWidgets.QMessageBox()
