@@ -1,26 +1,31 @@
 from typing import List
 import shutil
 from huggingface_hub import notebook_login, HfApi, ModelFilter
+import gui
 
 
 class HuggingFace:
 
     @staticmethod
     def get_all_model_names(sort="downloads", limit=10, direction=-1) -> List:
-        api = HfApi()
-        models = api.list_models(
-            filter=ModelFilter(
-                task="text-to-image",
-            ), sort=sort, limit=limit, direction=direction
-        )
-        models = list(models)
+        try:
+            api = HfApi()
+            models = api.list_models(
+                filter=ModelFilter(
+                    task="text-to-image",
+                ), sort=sort, limit=limit, direction=direction
+            )
+            models = list(models)
 
-        modelNames = []
+            modelNames = []
 
-        for model in models:
-            modelNames.append(model.id)
+            for model in models:
+                modelNames.append(model.id)
 
-        return modelNames
+            return modelNames
+        except Exception as e:
+            gui.BasicUI.HandleError(e)
+            return None
 
     @staticmethod
     def auth_hugging_face():
