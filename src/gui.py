@@ -176,12 +176,13 @@ class LyricsGeneratorWidget(QtWidgets.QWidget):
         self.textbox_info = BasicUI.create_textbox(read_only=True)
         self.loading_bar = BasicUI.create_progress_bar()
 
-        itemList = utils.HuggingFace.get_all_model_names()
+        itemList = utils.HuggingFace.get_all_model_names(
+            limit=30, direction=-1, sort="downloads")
         if itemList is None or len(itemList) < 1:
             itemList = ["stabilityai/stable-diffusion-2-1", "stabilityai/sdxl-turbo", "Lykon/dreamshaper-xl-turbo",
                         "DGSpitzer/Cyberpunk-Anime-Diffusion", "SG161222/Realistic_Vision_V2.0", "stabilityai/sd-turbo",
                         "SG161222/Realistic_Vision_V6.0_B1_noVAE", "Lykon/DreamShaper", "dataautogpt3/OpenDalleV1.1",]
-        # Sort the list
+        # Sort the list alphabetically
         itemList.sort()
         # self.modelList = BasicUI.create_combo_box(itemList=itemList)
         self.modelList = BasicUI.create_searchable_combobox(itemList=itemList)
