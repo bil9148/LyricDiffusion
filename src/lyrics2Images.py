@@ -14,10 +14,10 @@ import gui
 
 class Lyrics2Images:
     def __init__(self,
-                 model_id: str = "CompVis/stable-diffusion-v1-4",
+                 model_id: str = "stabilityai/sdxl-turbo",
                  torch_dtype: torch.dtype = torch.float16,
                  prompt: str = "digital art",
-                 num_inference_steps: int = 5,
+                 num_inference_steps: int = 1,
                  use_auth_token: bool = False,
                  ):
         self.model_id = model_id
