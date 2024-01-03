@@ -170,7 +170,7 @@ class LyricsGeneratorWidget(QtWidgets.QWidget):
             placeholder_text="e.g. Coolio")
         self.label_modelList = BasicUI.create_label("Model:")
         self.label_numInferenceSteps = BasicUI.create_label(
-            "Num inference steps:")
+            "Num. inference steps:")
         self.textbox_numInferenceSteps = BasicUI.create_textbox(text="20")
         self.label_info = BasicUI.create_label("Info:")
         self.textbox_info = BasicUI.create_textbox(read_only=True)
