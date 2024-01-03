@@ -15,14 +15,12 @@ import gui
 class Lyrics2Images:
     def __init__(self,
                  model_id: str = "CompVis/stable-diffusion-v1-4",
-                 variant: str = "fp16",
                  torch_dtype: torch.dtype = torch.float16,
                  prompt: str = "digital art",
                  num_inference_steps: int = 5,
                  use_auth_token: bool = False,
                  ):
         self.model_id = model_id
-        self.variant = variant
         self.torch_dtype = torch_dtype
         self.prompt = prompt
         self.num_inference_steps = num_inference_steps
@@ -34,13 +32,12 @@ class Lyrics2Images:
     def load_model_pipeline(self) -> AutoPipelineForText2Image:
         pass
         # return StableDiffusionPipeline.from_pretrained(self.model_id,
-        #                                                variant=self.variant,
         #                                                torch_dtype=self.torch_dtype,
         #                                                use_auth_token=self.use_auth_token).to("cuda")
 
     def load_auto_pipeline(self) -> AutoPipelineForText2Image:
         return AutoPipelineForText2Image.from_pretrained(
-            self.model_id, torch_dtype=self.torch_dtype, variant=self.variant).to("cuda")
+            self.model_id, torch_dtype=self.torch_dtype).to("cuda")  # , variant=self.variant
 
     def should_skip_verse(self, verse: str) -> bool:
         return len(verse) == 0 or "[" in verse or "]" in verse or "(" in verse or ")" in verse or "{" in verse or "}" in verse
@@ -109,7 +106,6 @@ def run(song_name, artist_name, model_id, num_inference_steps, uiWidget):
         l2i = lyrics2Images.Lyrics2Images(
             num_inference_steps=num_inference_steps,
             torch_dtype=torch.float16,
-            variant="fp16",
             use_auth_token=False,
             model_id=model_id,
         )
@@ -118,7 +114,7 @@ def run(song_name, artist_name, model_id, num_inference_steps, uiWidget):
             settings.OutputPath.getOutputPath(), "images", f"{song_name} - {artist_name}")
 
         settings.logging.info(
-            f"Starting generation for {song_name} - {artist_name}.\nModel: {model_id}.\nOutput path: {output_path}\nTorch dtype: {l2i.torch_dtype}\nVariant: {l2i.variant}\nNum inference steps: {l2i.num_inference_steps}")
+            f"Starting generation for {song_name} by {artist_name}.\nModel: {model_id}.\nOutput path: {output_path}\nTorch dtype: {l2i.torch_dtype}\nNum inference steps: {l2i.num_inference_steps}")
 
         # Run the model
         l2i.generate(verses=verses, output_path=output_path, uiWidget=uiWidget)

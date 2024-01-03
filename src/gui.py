@@ -6,6 +6,7 @@ from PySide6.QtWidgets import QWidget
 import lyrics2Images
 import settings as settings
 
+
 class FontManager:
     @staticmethod
     def getFont() -> QtGui.QFont:
@@ -14,13 +15,13 @@ class FontManager:
 
 class BasicUI:
     @staticmethod
-    def HandleError(exception:Exception, silent=False):
+    def HandleError(exception: Exception, silent=False):
         settings.logging.error(exception, exc_info=True)
 
         # If not silent and UI is available, show error message
         if not silent and QtWidgets.QApplication.instance():
             BasicUI.MsgBox(exception)
-                
+
     @staticmethod
     def AskYesNo(text):
         msg = QtWidgets.QMessageBox()
@@ -30,7 +31,7 @@ class BasicUI:
         msg.setStandardButtons(
             QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
         return msg.exec_() == QtWidgets.QMessageBox.Yes
-    
+
     @staticmethod
     def MsgBox(e):
         msg = QtWidgets.QMessageBox()
@@ -54,7 +55,7 @@ class BasicUI:
         return checkbox
 
     @staticmethod
-    def create_textbox(read_only=False,text=""):
+    def create_textbox(read_only=False, text=""):
         textbox = QtWidgets.QLineEdit()
         textbox.setFont(FontManager.getFont())
         textbox.setText(text)
@@ -72,7 +73,7 @@ class BasicUI:
         return progress_bar
 
     @staticmethod
-    def create_model_list(itemList: Optional[list] = None):
+    def create_combo_box(itemList: Optional[list] = None):
         model_list = QtWidgets.QComboBox()
 
         if itemList is not None:
@@ -94,14 +95,16 @@ class SettingsWidget(QtWidgets.QWidget):
 
         # Create widgets and set common font
         self.label_outputPath = BasicUI.create_label("Output path:")
-        self.textbox_outputPath = BasicUI.create_textbox(read_only=True,text=settings.OutputPath.getOutputPath())
+        self.textbox_outputPath = BasicUI.create_textbox(
+            read_only=True, text=settings.OutputPath.getOutputPath())
         self.button_browseOutputPath = BasicUI.create_button("Browse")
 
         self.checkbox_skipEmptyVerses = BasicUI.create_checkbox(
             "Skip empty verses", settings.SkipEmptyVerses.getSkipEmptyVerses())
 
         # Connect checkbox signal
-        self.checkbox_skipEmptyVerses.stateChanged.connect(self.skipEmptyVersesChanged)
+        self.checkbox_skipEmptyVerses.stateChanged.connect(
+            self.skipEmptyVersesChanged)
 
         # Connect button signal
         self.button_browseOutputPath.clicked.connect(self.browseOutputPath)
@@ -114,21 +117,23 @@ class SettingsWidget(QtWidgets.QWidget):
         self.layout.addWidget(self.textbox_outputPath, 0, 1)
         self.layout.addWidget(self.button_browseOutputPath, 0, 2)
 
-        self.layout.addWidget(self.checkbox_skipEmptyVerses, 1, 0, 1, -1)        
+        self.layout.addWidget(self.checkbox_skipEmptyVerses, 1, 0, 1, -1)
 
         self.setLayout(self.layout)
 
     def skipEmptyVersesChanged(self):
-        settings.logging.info(f"Skip empty verses changed to: {self.checkbox_skipEmptyVerses.isChecked()}")
-        settings.SkipEmptyVerses.setSkipEmptyVerses(self.checkbox_skipEmptyVerses.isChecked())
+        settings.logging.info(
+            f"Skip empty verses changed to: {self.checkbox_skipEmptyVerses.isChecked()}")
+        settings.SkipEmptyVerses.setSkipEmptyVerses(
+            self.checkbox_skipEmptyVerses.isChecked())
 
-    def browseOutputPath(self):    
+    def browseOutputPath(self):
         temp = QtWidgets.QFileDialog.getExistingDirectory(
             self, "Select output path")
-        
+
         if temp:
             settings.OutputPath.setOutputPath(temp)
-            temp= settings.OutputPath.getOutputPath()
+            temp = settings.OutputPath.getOutputPath()
             self.textbox_outputPath.setText(temp)
             settings.logging.info(f"Output path changed to: {temp}")
 
@@ -150,16 +155,12 @@ class LyricsGeneratorWidget(QtWidgets.QWidget):
         self.label_info = BasicUI.create_label("Info:")
         self.textbox_info = BasicUI.create_textbox(read_only=True)
         self.loading_bar = BasicUI.create_progress_bar()
-        # Generate black images
-        # model_list.addItem("dataautogpt3/OpenDalleV1.1")
-        # model_list.addItem("stabilityai/sdxl-turbo")
-        # Don't work - no such modeling files are available
-        # self.modelList.addItem("SG161222/Realistic_Vision_V2.0")
-        # self.modelList.addItem("SG161222/Realistic_Vision_V6.0_B1_noVAE")
-        # self.modelList.addItem("Lykon/DreamShaper")
-        itemList = ["stabilityai/stable-diffusion-2-1",
-                    "DGSpitzer/Cyberpunk-Anime-Diffusion"]
-        self.modelList = BasicUI.create_model_list(itemList=itemList)
+        itemList = ["stabilityai/stable-diffusion-2-1", "stabilityai/sdxl-turbo", "Lykon/dreamshaper-xl-turbo",
+                    "DGSpitzer/Cyberpunk-Anime-Diffusion", "SG161222/Realistic_Vision_V2.0", "stabilityai/sd-turbo",
+                    "SG161222/Realistic_Vision_V6.0_B1_noVAE", "Lykon/DreamShaper", "dataautogpt3/OpenDalleV1.1",]
+        # Sort the list
+        itemList.sort()
+        self.modelList = BasicUI.create_combo_box(itemList=itemList)
         self.button_generate = BasicUI.create_button("Generate")
         self.button_settings = BasicUI.create_button("Settings")
 
