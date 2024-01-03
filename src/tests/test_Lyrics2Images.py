@@ -30,10 +30,6 @@ class TestLyrics2Images(unittest.TestCase):
             self.assertTrue(os.path.exists(file_path),
                             f"File {file_path} not found.")
 
-    def test_models_path(self):
-        # Arrange
-        print(os.environ['TRANSFORMERS_CACHE'])
-
 
 if __name__ == '__main__':
     unittest.main()

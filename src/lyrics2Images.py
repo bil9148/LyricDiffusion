@@ -10,6 +10,7 @@ from lyricExtractor import getLyrics
 import settings as settings
 from PySide6 import QtWidgets
 import gui
+import logging
 
 
 class Lyrics2Images:
@@ -36,8 +37,32 @@ class Lyrics2Images:
         #                                                use_auth_token=self.use_auth_token).to("cuda")
 
     def load_auto_pipeline(self) -> AutoPipelineForText2Image:
+        # C:\Users\user\.cache\huggingface\hub
+        cache_dir = os.path.join(os.path.expanduser(
+            "~"), ".cache", "huggingface", "hub")
+
+        logging.info(f"Hugging Face Cache direrctory is: {cache_dir}")
+
+        if not os.path.exists(cache_dir):
+            os.makedirs(cache_dir)
+
+        # Format is: models--dataautogpt3--OpenDalleV1.1 (models--{author}--{model_name})
+        modelAuthor = self.model_id.split("/")[0]
+        modelName = self.model_id.split("/")[1]
+        modelDir = f"models--{modelAuthor}--{modelName}"
+        modelPath = os.path.join(cache_dir, modelDir)
+
+        # Check if model needs to be downloaded
+        if not os.path.exists(modelPath):
+            logging.info(f"Model {modelPath} not found in {cache_dir}.")
+            if not gui.BasicUI.AskYesNo(
+                    f"Model {self.model_id} not found in cache. Download it now?"):
+                return None
+            else:
+                logging.info(f"Downloading model {self.model_id}...")
+
         return AutoPipelineForText2Image.from_pretrained(
-            self.model_id, torch_dtype=self.torch_dtype).to("cuda")  # , variant=self.variant
+            self.model_id, torch_dtype=self.torch_dtype, cache_dir=cache_dir).to("cuda")
 
     def should_skip_verse(self, verse: str) -> bool:
         return len(verse) == 0 or "[" in verse or "]" in verse or "(" in verse or ")" in verse or "{" in verse or "}" in verse
@@ -64,6 +89,9 @@ class Lyrics2Images:
         """Runs the model on the given verses and saves the images to the output path"""
         # Load the model pipeline
         pipe = self.load_auto_pipeline()
+
+        if pipe is None:
+            return
 
         # Create the output directory
         os.makedirs(output_path, exist_ok=True)
