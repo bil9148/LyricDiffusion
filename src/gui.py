@@ -5,6 +5,7 @@ from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QWidget
 import lyrics2Images
 import settings as settings
+import utils
 
 
 class FontManager:
@@ -56,6 +57,20 @@ class BasicUI:
         checkbox.setChecked(checked)
         checkbox.setFont(FontManager.getFont())
         return checkbox
+
+    @staticmethod
+    def create_searchable_combobox(itemList: Optional[list] = None):
+        combobox = QtWidgets.QComboBox()
+        combobox.setEditable(True)
+        combobox.setInsertPolicy(QtWidgets.QComboBox.NoInsert)
+        combobox.completer().setCompletionMode(QtWidgets.QCompleter.PopupCompletion)
+
+        if itemList is not None:
+            combobox.addItems(itemList)
+
+        combobox.setFont(FontManager.getFont())
+
+        return combobox
 
     @staticmethod
     def create_textbox(read_only=False, text="", placeholder_text=""):
@@ -160,12 +175,17 @@ class LyricsGeneratorWidget(QtWidgets.QWidget):
         self.label_info = BasicUI.create_label("Info:")
         self.textbox_info = BasicUI.create_textbox(read_only=True)
         self.loading_bar = BasicUI.create_progress_bar()
-        itemList = ["stabilityai/stable-diffusion-2-1", "stabilityai/sdxl-turbo", "Lykon/dreamshaper-xl-turbo",
-                    "DGSpitzer/Cyberpunk-Anime-Diffusion", "SG161222/Realistic_Vision_V2.0", "stabilityai/sd-turbo",
-                    "SG161222/Realistic_Vision_V6.0_B1_noVAE", "Lykon/DreamShaper", "dataautogpt3/OpenDalleV1.1",]
+
+        itemList = utils.HuggingFace.get_all_model_names()
+        if itemList is None or len(itemList) < 1:
+            itemList = ["stabilityai/stable-diffusion-2-1", "stabilityai/sdxl-turbo", "Lykon/dreamshaper-xl-turbo",
+                        "DGSpitzer/Cyberpunk-Anime-Diffusion", "SG161222/Realistic_Vision_V2.0", "stabilityai/sd-turbo",
+                        "SG161222/Realistic_Vision_V6.0_B1_noVAE", "Lykon/DreamShaper", "dataautogpt3/OpenDalleV1.1",]
         # Sort the list
         itemList.sort()
-        self.modelList = BasicUI.create_combo_box(itemList=itemList)
+        # self.modelList = BasicUI.create_combo_box(itemList=itemList)
+        self.modelList = BasicUI.create_searchable_combobox(itemList=itemList)
+
         self.button_generate = BasicUI.create_button("Generate")
         self.button_settings = BasicUI.create_button("Settings")
 

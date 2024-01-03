@@ -1,6 +1,6 @@
 import os
 from tqdm import tqdm
-from utils import auth_hugging_face
+from utils import HuggingFace
 import torch
 from torch import autocast
 # from diffusers import StableDiffusionPipeline
@@ -28,7 +28,7 @@ class Lyrics2Images:
         self.use_auth_token = use_auth_token
 
         if self.use_auth_token:
-            auth_hugging_face()
+            HuggingFace.auth_hugging_face()
 
     def load_model_pipeline(self) -> AutoPipelineForText2Image:
         pass
