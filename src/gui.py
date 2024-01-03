@@ -55,10 +55,11 @@ class BasicUI:
         return checkbox
 
     @staticmethod
-    def create_textbox(read_only=False, text=""):
+    def create_textbox(read_only=False, text="", placeholder_text=""):
         textbox = QtWidgets.QLineEdit()
         textbox.setFont(FontManager.getFont())
         textbox.setText(text)
+        textbox.setPlaceholderText(placeholder_text)
         textbox.setReadOnly(read_only)
         return textbox
 
@@ -145,13 +146,14 @@ class LyricsGeneratorWidget(QtWidgets.QWidget):
         # Create widgets and set common font
         self.label_songName = BasicUI.create_label("Song name:")
         self.label_artistName = BasicUI.create_label("Artist name:")
-        self.textbox_songName = BasicUI.create_textbox()
-        self.textbox_artistName = BasicUI.create_textbox()
+        self.textbox_songName = BasicUI.create_textbox(
+            placeholder_text="e.g. Gangsta's Paradise")
+        self.textbox_artistName = BasicUI.create_textbox(
+            placeholder_text="e.g. Coolio")
         self.label_modelList = BasicUI.create_label("Model:")
         self.label_numInferenceSteps = BasicUI.create_label(
             "Num inference steps:")
-        self.textbox_numInferenceSteps = BasicUI.create_textbox()
-        self.textbox_numInferenceSteps.setText("50")
+        self.textbox_numInferenceSteps = BasicUI.create_textbox(text="20")
         self.label_info = BasicUI.create_label("Info:")
         self.textbox_info = BasicUI.create_textbox(read_only=True)
         self.loading_bar = BasicUI.create_progress_bar()
