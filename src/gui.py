@@ -24,6 +24,9 @@ class BasicUI:
 
     @staticmethod
     def AskYesNo(text):
+        if not QtWidgets.QApplication.instance():
+            return True
+
         msg = QtWidgets.QMessageBox()
         msg.setIcon(QtWidgets.QMessageBox.Question)
         msg.setText(text)
