@@ -104,7 +104,7 @@ class SkipEmptyVerses:
 
 def configure_logging():
 
-    logFilePath = os.path.join(OutputPath.getOutputPath(), "log.txt")
+    logFilePath = os.path.join(OutputPath.getDefaultOutputPath(), "log.txt")
 
     logging.basicConfig(
         level=logging.INFO,
