@@ -30,7 +30,7 @@ Run the Application:
 
     python main.py
 
-    Follow the on-screen instructions to enter the artist name, song name, and customize other options.
+Follow the on-screen instructions to enter the artist name, song name, and customize other options.
 
 <h2>User Interface</h2>
 
