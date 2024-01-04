@@ -141,8 +141,6 @@ class SettingsWidget(QtWidgets.QWidget):
         self.setLayout(self.layout)
 
     def skipEmptyVersesChanged(self):
-        settings.logging.info(
-            f"Skip empty verses changed to: {self.checkbox_skipEmptyVerses.isChecked()}")
         settings.SkipEmptyVerses.setSkipEmptyVerses(
             self.checkbox_skipEmptyVerses.isChecked())
 
@@ -154,7 +152,6 @@ class SettingsWidget(QtWidgets.QWidget):
             settings.OutputPath.setOutputPath(temp)
             temp = settings.OutputPath.getOutputPath()
             self.textbox_outputPath.setText(temp)
-            settings.logging.info(f"Output path changed to: {temp}")
 
 
 class LyricsGeneratorWidget(QtWidgets.QWidget):
