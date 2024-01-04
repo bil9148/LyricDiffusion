@@ -32,10 +32,6 @@ Run the Application:
 
 Follow the on-screen instructions to enter the artist name, song name, and customize other options.
 
-<h2>User Interface</h2>
-
-All customization options are conveniently presented in the application's user interface. No need for manual configuration files. Simply interact with the prompts provided.
-
 <h2>Contributing</h2>
 
 If you'd like to contribute to Lyrics2Images, feel free to fork the repository, make your enhancements, and submit a pull request.
@@ -43,7 +39,3 @@ If you'd like to contribute to Lyrics2Images, feel free to fork the repository, 
 <h2>Issues</h2>
 
 Encountered a bug or have a suggestion? Open an issue on the GitHub repository to help improve Lyrics2Images.
-
-<h2>License</h2>
-
-This project is licensed under the MIT License - see the LICENSE file for details.
