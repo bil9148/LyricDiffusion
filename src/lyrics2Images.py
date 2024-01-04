@@ -17,7 +17,7 @@ class Lyrics2Images:
     def __init__(self,
                  model_id: str = "stabilityai/sdxl-turbo",
                  torch_dtype: torch.dtype = torch.float16,
-                 prompt: str = "digital art",
+                 prompt: str = "",
                  num_inference_steps: int = 1,
                  use_auth_token: bool = False,
                  ):
@@ -113,6 +113,9 @@ class Lyrics2Images:
                 # Force UI update
                 QtWidgets.QApplication.processEvents()
 
+                if self.prompt is not None and len(self.prompt) > 0:
+                    verse = f"{verse}, {self.prompt}"
+
                 self.process_verse(verse, output_path, i,
                                    pipe, skip_empty_verses)
 
@@ -122,7 +125,7 @@ class Lyrics2Images:
             uiWidget.textbox_info.setText("Done")
 
 
-def run(song_name, artist_name, model_id, num_inference_steps, uiWidget):
+def run(song_name, artist_name, model_id, num_inference_steps, uiWidget, prompt=""):
     """Runs the program"""
     try:
         # Get the lyrics
@@ -136,13 +139,14 @@ def run(song_name, artist_name, model_id, num_inference_steps, uiWidget):
             torch_dtype=torch.float16,
             use_auth_token=False,
             model_id=model_id,
+            prompt=prompt
         )
 
         output_path = os.path.join(
             settings.OutputPath.getOutputPath(), "images", f"{song_name} - {artist_name}")
 
         settings.logging.info(
-            f"Starting generation for {song_name} by {artist_name}.\nModel: {model_id}.\nOutput path: {output_path}\nTorch dtype: {l2i.torch_dtype}\nNum inference steps: {l2i.num_inference_steps}")
+            f"Starting generation for {song_name} by {artist_name}.\nModel: {model_id}.\nOutput path: {output_path}\nTorch dtype: {l2i.torch_dtype}\nNum inference steps: {l2i.num_inference_steps}\nExtra prompt: {l2i.prompt}")
 
         # Run the model
         l2i.generate(verses=verses, output_path=output_path, uiWidget=uiWidget)

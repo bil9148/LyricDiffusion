@@ -172,6 +172,9 @@ class LyricsGeneratorWidget(QtWidgets.QWidget):
         self.label_numInferenceSteps = BasicUI.create_label(
             "Num. inference steps:")
         self.textbox_numInferenceSteps = BasicUI.create_textbox(text="20")
+        self.label_extra_prompt = BasicUI.create_label("Extra prompt:")
+        self.textbox_extra_prompt = BasicUI.create_textbox(
+            placeholder_text="e.g. dark ambiance, best quality, extremely detailed, epic")
         self.label_info = BasicUI.create_label("Info:")
         self.textbox_info = BasicUI.create_textbox(read_only=True)
         self.loading_bar = BasicUI.create_progress_bar()
@@ -204,11 +207,13 @@ class LyricsGeneratorWidget(QtWidgets.QWidget):
         self.layout.addWidget(self.modelList, 2, 1)
         self.layout.addWidget(self.label_numInferenceSteps, 3, 0)
         self.layout.addWidget(self.textbox_numInferenceSteps, 3, 1)
-        self.layout.addWidget(self.label_info, 4, 0)
-        self.layout.addWidget(self.textbox_info, 4, 1)
-        self.layout.addWidget(self.loading_bar, 5, 0, 1, -1)
-        self.layout.addWidget(self.button_generate, 6, 1)
-        self.layout.addWidget(self.button_settings, 6, 0)
+        self.layout.addWidget(self.label_extra_prompt, 4, 0)
+        self.layout.addWidget(self.textbox_extra_prompt, 4, 1)
+        self.layout.addWidget(self.label_info, 5, 0)
+        self.layout.addWidget(self.textbox_info, 5, 1)
+        self.layout.addWidget(self.loading_bar, 6, 0, 1, -1)
+        self.layout.addWidget(self.button_generate, 7, 1)
+        self.layout.addWidget(self.button_settings, 7, 0)
 
         self.setLayout(self.layout)
 
@@ -237,7 +242,7 @@ class LyricsGeneratorWidget(QtWidgets.QWidget):
                 artistName) > 0, "Artist name cannot be empty"
             assert num_inference_steps > 0 and num_inference_steps <= 100, "Number of inference steps must be between 1 and 100"
 
-            lyrics2Images.run(song_name=songName, artist_name=artistName,
+            lyrics2Images.run(song_name=songName, artist_name=artistName, prompt=self.textbox_extra_prompt.text(),
                               model_id=model_id, num_inference_steps=num_inference_steps, uiWidget=self)
         except Exception as e:
             BasicUI.HandleError(e)
