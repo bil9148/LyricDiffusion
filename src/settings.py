@@ -102,15 +102,26 @@ class SkipEmptyVerses:
         return SkipVerses
 
 
-def configure_logging():
+class Logger:
+    @staticmethod
+    def getLogFilePath():
+        # Default path is the documents directory
+        documentsDir = os.path.join(os.path.expanduser("~"), "Documents")
+        return os.path.join(documentsDir, "Lyrics2Images.txt")
 
-    logFilePath = os.path.join(OutputPath.getDefaultOutputPath(), "log.txt")
+    @staticmethod
+    def configure_logging():
 
-    logging.basicConfig(
-        level=logging.INFO,
-        format="%(asctime)s - %(levelname)s - %(message)s",
-        handlers=[
-            logging.StreamHandler(),
-            logging.FileHandler(logFilePath)
-        ]
-    )
+        logFilePath = Logger.getLogFilePath()
+
+        # If directory doesn't exist, create it
+        os.makedirs(os.path.dirname(logFilePath), exist_ok=True)
+
+        logging.basicConfig(
+            level=logging.INFO,
+            format="%(asctime)s - %(levelname)s - %(message)s",
+            handlers=[
+                logging.StreamHandler(),
+                logging.FileHandler(logFilePath)
+            ]
+        )
