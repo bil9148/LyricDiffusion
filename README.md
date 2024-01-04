@@ -1,4 +1,4 @@
-Lyrics2Images
+<h1>Lyrics2Images</h1>
 
 Lyrics2Images is a versatile application that transforms song lyrics into visually stunning images. By leveraging the Genius API, it seamlessly retrieves lyrics based on the artist and song entered by the user. The application provides a user-friendly interface with various customization options, allowing you to generate images tailored to your preferences.
 Features
@@ -15,38 +15,35 @@ Features
 
     Output Path Configuration: Change the output path where the images will be saved.
 
-Usage
+<h2>Usage</h2>
 
-    Clone the Repository:
+Clone the repository
 
-    bash
+    git clone https://github.com/bil9148/L2I/
 
-git clone https://github.com/your-username/Lyrics2Images.git
-cd Lyrics2Images
 
 Install Dependencies:
 
-bash
-
-pip install -r requirements.txt
+    pip install -r requirements.txt
 
 Run the Application:
-
-bash
 
     python main.py
 
     Follow the on-screen instructions to enter the artist name, song name, and customize other options.
 
-User Interface
+<h2>User Interface</h2>
 
 All customization options are conveniently presented in the application's user interface. No need for manual configuration files. Simply interact with the prompts provided.
-Contributing
+
+<h2>Contributing</h2>
 
 If you'd like to contribute to Lyrics2Images, feel free to fork the repository, make your enhancements, and submit a pull request.
-Issues
+
+<h2>Issues</h2>
 
 Encountered a bug or have a suggestion? Open an issue on the GitHub repository to help improve Lyrics2Images.
-License
+
+<h2>License</h2>
 
 This project is licensed under the MIT License - see the LICENSE file for details.
