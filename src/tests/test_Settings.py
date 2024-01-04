@@ -1,7 +1,7 @@
 import unittest
-import logging
 from unittest.mock import patch
-from settings import OutputPath, SkipEmptyVerses, configure_logging
+import logging
+from settings import OutputPath, SkipEmptyVerses, Logger
 
 
 class TestOutputPath(unittest.TestCase):
@@ -47,11 +47,11 @@ class TestSkipEmptyVerses(unittest.TestCase):
                          f"result: {result}, expected: {expected_skip_empty_verses}")
 
 
-class TestConfigureLogging(unittest.TestCase):
+class TestLogger(unittest.TestCase):
 
-    def test_configure_logging(self):
-        configure_logging()
-        self.assertEqual(logging.getLogger().level, logging.INFO)
+    def test_get_log_file_path(self):
+        log_file_path = Logger.getLogFilePath()
+        self.assertIsInstance(log_file_path, str)
 
 
 if __name__ == '__main__':
