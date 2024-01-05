@@ -191,7 +191,7 @@ class LyricsGeneratorWidget(QtWidgets.QWidget):
         self.button_settings = BasicUI.create_button("Settings")
 
         # Connect button signal
-        self.button_generate.clicked.connect(self.generate)
+        self.button_generate.clicked.connect(self.L2I)
         self.button_settings.clicked.connect(self.showSettings)
 
         # Create layout and add widgets
@@ -221,7 +221,7 @@ class LyricsGeneratorWidget(QtWidgets.QWidget):
         self.settingsWidget.resize(600, 100)
         self.settingsWidget.setWindowTitle("Settings")
 
-    def generate(self):
+    def L2I(self):
         try:
             songName = self.textbox_songName.text()
             artistName = self.textbox_artistName.text()
