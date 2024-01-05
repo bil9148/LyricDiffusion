@@ -59,6 +59,10 @@ Follow the on-screen instructions to enter the artist name, song name, and custo
 
 If you'd like to contribute to LyricDiffusion, feel free to fork the repository, make your enhancements, and submit a pull request.
 
+<h2>Limitations</h2>
+
+The image generation works only on NVIDIA GPUs.
+
 <h2>Issues</h2>
 
-Encountered a bug or have a suggestion? Open an issue on the GitHub repository to help improve LyricDiffusion.
+Encountered a bug or have a suggestion? Open an issue on the repository to help improve LyricDiffusion.
