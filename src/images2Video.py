@@ -7,11 +7,12 @@ import cv2
 
 
 class Images2Video:
-    def __init__(self, imagesPath, outputPath, outputFileName, uiWidget=None):
+    def __init__(self, imagesPath, outputPath, outputFileName, fps=12, uiWidget=None):
         self.imagesPath: str = imagesPath
         self.outputPath: str = outputPath
         self.outputFileName: str = outputFileName
         self.uiWidget = uiWidget
+        self.fps: int = int(fps)
 
     def get_read_images(self):
         # Check if the images path exists
@@ -66,7 +67,7 @@ class Images2Video:
 
             # Create the video writer with appropriate codec
             video = cv2.VideoWriter(
-                os.path.join(self.outputPath, self.outputFileName), cv2.VideoWriter_fourcc(*'mp4v'), 12, (width, height))
+                os.path.join(self.outputPath, self.outputFileName), cv2.VideoWriter_fourcc(*'mp4v'), self.fps, (width, height))
 
             if self.uiWidget is not None:
                 self.uiWidget.loading_bar.setMaximum(len(read_Images))

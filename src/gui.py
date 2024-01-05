@@ -224,6 +224,10 @@ class ImagesToVideoTab(QtWidgets.QWidget):
         # Create widgets and set common font
         self.label_images_path = BasicUI.create_label("Images path:")
 
+        self.label_video_speed = BasicUI.create_label("Video speed:")
+        self.textbox_video_speed = BasicUI.create_textbox(
+            placeholder_text="(between 1 and 60) (default: 12)")
+
         self.textbox_images_path = BasicUI.create_textbox(
             read_only=True, placeholder_text="e.g. C:/Users/JohnDoe/Desktop/images")
 
@@ -248,8 +252,12 @@ class ImagesToVideoTab(QtWidgets.QWidget):
         self.layout.addWidget(self.label_images_path, 0, 0)
         self.layout.addWidget(self.textbox_images_path, 0, 1)
         self.layout.addWidget(self.button_browse_images_path, 0, 2)
-        self.layout.addWidget(self.loading_bar, 1, 0, 1, -1)
-        self.layout.addWidget(self.button_generate_video, 2, 1)
+
+        self.layout.addWidget(self.label_video_speed, 1, 0)
+        self.layout.addWidget(self.textbox_video_speed, 1, 1)
+
+        self.layout.addWidget(self.loading_bar, 2, 0, 1, -1)
+        self.layout.addWidget(self.button_generate_video, 3, 1)
 
     def browseImagesPath(self):
         temp = QtWidgets.QFileDialog.getExistingDirectory(
@@ -275,8 +283,17 @@ class ImagesToVideoTab(QtWidgets.QWidget):
             outputPath = os.path.join(
                 settings.OutputPath.getOutputPath(), "videos")
 
+            if not self.textbox_video_speed.text():
+                raise Exception("Video speed cannot be empty")
+
+            fps: int = self.textbox_video_speed.text()
+
+            if not fps or not fps.isnumeric() or int(fps) < 1 or int(fps) > 60:
+                raise Exception(
+                    "Video speed must be a number between 1 and 60")
+
             i2v = images2Video.Images2Video(
-                imagesPath=imagesPath, outputPath=outputPath, outputFileName=outputFileName, uiWidget=self)
+                imagesPath=imagesPath, outputPath=outputPath, outputFileName=outputFileName, fps=fps, uiWidget=self)
 
             i2v.generate()
 
