@@ -239,8 +239,8 @@ class LyricsGeneratorWidget(QtWidgets.QWidget):
                 artistName) > 0, "Artist name cannot be empty"
             assert num_inference_steps > 0 and num_inference_steps <= 100, "Number of inference steps must be between 1 and 100"
 
-            lyrics2Images.run(song_name=songName, artist_name=artistName, prompt=self.textbox_extra_prompt.text(),
-                              model_id=model_id, num_inference_steps=num_inference_steps, uiWidget=self)
+            lyrics2Images.Lyrics2Images.run(song_name=songName, artist_name=artistName, prompt=self.textbox_extra_prompt.text(),
+                                            model_id=model_id, num_inference_steps=num_inference_steps, uiWidget=self)
         except Exception as e:
             BasicUI.HandleError(e)
             self.loading_bar.setValue(0)
