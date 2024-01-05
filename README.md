@@ -4,7 +4,7 @@ LyricDiffusion is a versatile application that transforms song lyrics into visua
 By leveraging the Genius API, it seamlessly retrieves lyrics based on the artist and song entered by the user. 
 The application provides a user-friendly interface with various customization options, allowing you to generate images tailored to your preferences.
 
-<h2>Examples</h2>
+<h2>Image generation examples</h2>
 
     As I walk through the valley of the shadow of death
 
@@ -14,6 +14,11 @@ The application provides a user-friendly interface with various customization op
     
 ![5](https://github.com/bil9148/LyricDiffusion/assets/104930566/b5a94e21-5e75-4d82-98df-5dc198876ba8)
 
+<h2>Video generation examples</h2>
+
+    Gangsta's paradise - Coolio - LykonDreamShaper
+
+![ezgif com-optimize](https://github.com/bil9148/LyricDiffusion/assets/104930566/9f3b7249-bb0e-438c-81f8-18b5f3f9c46c)
 
 <h2>Features</h2>
 
