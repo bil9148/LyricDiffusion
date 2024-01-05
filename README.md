@@ -40,7 +40,7 @@ The application provides a user-friendly interface with various customization op
 
 Clone the repository
 
-    git clone https://github.com/bil9148/L2I/
+    git clone https://github.com/bil9148/LyricDiffusion
 
 
 Install Dependencies:
