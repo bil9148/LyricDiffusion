@@ -67,7 +67,7 @@ If you'd like to contribute to LyricDiffusion, feel free to fork the repository,
 
 The image generation works only on NVIDIA GPUs.
 
-<h2>Dependencies</h2>
+<h2>Build</h2>
 
 Nuitka - 1.9.6
 
