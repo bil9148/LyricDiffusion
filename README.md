@@ -75,6 +75,8 @@ PyTorch - 12.1 (https://pytorch.org/get-started/locally/)
 
 The rest is in the requirements.txt file.
 
+    pip install -r requirements.txt
+
 <h2>Issues</h2>
 
 Encountered a bug or have a suggestion? Open an issue on the repository to help improve LyricDiffusion.
