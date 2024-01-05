@@ -122,7 +122,7 @@ class Lyrics2Images:
         # Update the UI
         if uiWidget is not None:
             uiWidget.loading_bar.setValue(uiWidget.loading_bar.maximum())
-            uiWidget.textbox_info.setText("Done")
+            uiWidget.textbox_info.setText("Done.")
 
     @staticmethod
     def run(song_name, artist_name, model_id, num_inference_steps, uiWidget, prompt=""):

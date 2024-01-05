@@ -57,9 +57,11 @@ class Images2Video:
 
             height, width, layers = img.shape
 
-            # Create the video writer
+            # Create the video writer with appropriate codec
+            # You can try 'mp4v', 'XVID', 'MJPG', or 'H264'
+            fourcc = cv2.VideoWriter_fourcc(*'mp4v')
             video = cv2.VideoWriter(os.path.join(
-                self.outputPath, self.outputFileName), 0, 1, (width, height))
+                self.outputPath, self.outputFileName), fourcc, 1, (width, height))
 
             if self.uiWidget is not None:
                 self.uiWidget.loading_bar.setMaximum(len(images))
@@ -67,14 +69,24 @@ class Images2Video:
 
             # Add each image to the video
             for image in tqdm(images):
-                video.write(cv2.imread(image))
-                print(image)
-                # Update the UI
-                if self.uiWidget is not None:
-                    self.uiWidget.textbox_info.setText(f"Processing {image}")
+                try:
+                    read_img = cv2.imread(image)
 
-                    # Force UI update
-                    QtWidgets.QApplication.processEvents()
+                    if read_img is None or read_img.size < 1:
+                        continue
+
+                    video.write(read_img)
+
+                    # Update the UI
+                    if self.uiWidget is not None:
+                        self.uiWidget.textbox_info.setText(
+                            f"Processing {image}")
+
+                        # Force UI update
+                        QtWidgets.QApplication.processEvents()
+
+                except Exception as e:
+                    gui.BasicUI.HandleError(e)
 
             # Release the video writer
             video.release()
@@ -82,6 +94,8 @@ class Images2Video:
             if self.uiWidget is not None:
                 self.uiWidget.loading_bar.setValue(
                     self.uiWidget.loading_bar.maximum())
-                self.uiWidget.textbox_info.setText("Done")
+                self.uiWidget.textbox_info.setText(
+                    f"Done.")
+
         except Exception as e:
             gui.BasicUI.HandleError(e)
