@@ -22,9 +22,6 @@ class Images2Video:
 
         files = os.listdir(self.imagesPath)
 
-        # Sort the files by name
-        files.sort(key=lambda f: int(os.path.splitext(os.path.basename(f))[0]))
-
         # Check if there are any images in the images path
         for file in files:
             if file.endswith(".png"):
@@ -35,9 +32,19 @@ class Images2Video:
                 if read_img is None or read_img.size < 1:
                     continue
 
-                images.append(read_img)
+                images.append((file, read_img))
 
-        return images
+        if len(images) == 0:
+            raise Exception("No images found.")
+
+        # Sort the images by file name
+        images.sort(key=lambda x: int(
+            os.path.splitext(os.path.basename(x[0]))[0]))
+
+        # Extract the sorted images without file names
+        sorted_images = [image[1] for image in images]
+
+        return sorted_images
 
     def generate(self):
         try:
@@ -73,8 +80,8 @@ class Images2Video:
 
                     # Update the UI
                     if self.uiWidget is not None:
-                        self.uiWidget.textbox_info.setText(
-                            f"Processing {read_img}")
+                        self.uiWidget.loading_bar.setValue(
+                            self.uiWidget.loading_bar.value() + 1)
 
                         # Force UI update
                         QtWidgets.QApplication.processEvents()
@@ -87,7 +94,6 @@ class Images2Video:
             if self.uiWidget is not None:
                 self.uiWidget.loading_bar.setValue(
                     self.uiWidget.loading_bar.maximum())
-                self.uiWidget.textbox_info.setText("Done")
 
         except Exception as e:
             gui.BasicUI.HandleError(e)
