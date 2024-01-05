@@ -7,17 +7,24 @@ import gui
 
 class Images2Video:
     def __init__(self, imagesPath, outputPath, outputFileName, uiWidget=None):
-        self.imagesPath = imagesPath
-        self.outputPath = outputPath
-        self.outputFileName = outputFileName
+        self.imagesPath: str = imagesPath
+        self.outputPath: str = outputPath
+        self.outputFileName: str = outputFileName
         self.uiWidget = uiWidget
 
     def get_images(self):
-        # Get the list of images
-        images = [os.path.join(self.imagesPath, f)
-                  for f in os.listdir(self.imagesPath) if f.endswith(".png")]
+        # Check if the images path exists
+        if not os.path.exists(self.imagesPath):
+            raise Exception("Images path does not exist.")
 
-        if not images:
+        images = []
+
+        # Check if there are any images in the images path
+        for file in os.listdir(self.imagesPath):
+            if file.endswith(".png"):
+                images.append(os.path.join(self.imagesPath, file))
+
+        if not images or len(images) == 0:
             raise Exception("No images found.")
 
         # Sort the images by name
@@ -61,7 +68,7 @@ class Images2Video:
             # Add each image to the video
             for image in tqdm(images):
                 video.write(cv2.imread(image))
-
+                print(image)
                 # Update the UI
                 if self.uiWidget is not None:
                     self.uiWidget.textbox_info.setText(f"Processing {image}")

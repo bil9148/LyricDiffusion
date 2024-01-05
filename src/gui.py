@@ -4,8 +4,10 @@ from PySide6 import QtCore, QtWidgets, QtGui
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QWidget
 import lyrics2Images
+import images2Video
 import settings as settings
 import utils
+import os
 
 
 class FontManager:
@@ -187,32 +189,42 @@ class LyricsGeneratorWidget(QtWidgets.QWidget):
         # self.modelList = BasicUI.create_combo_box(itemList=itemList)
         self.modelList = BasicUI.create_searchable_combobox(itemList=itemList)
 
-        self.button_generate = BasicUI.create_button("Generate")
+        self.button_generate_images = BasicUI.create_button("Generate images")
+        self.button_generate_video = BasicUI.create_button("Generate video")
         self.button_settings = BasicUI.create_button("Settings")
 
-        # Connect button signal
-        self.button_generate.clicked.connect(self.L2I)
+        # Connect button signals
+        self.button_generate_images.clicked.connect(self.run_L2I)
+        self.button_generate_video.clicked.connect(self.run_I2V)
         self.button_settings.clicked.connect(self.showSettings)
 
-        # Create layout and add widgets
-        self.layout = QtWidgets.QGridLayout()
-        self.layout.addWidget(self.textbox_artistName, 0, 1)
-        self.layout.addWidget(self.label_artistName, 0, 0)
-        self.layout.addWidget(self.label_songName, 1, 0)
-        self.layout.addWidget(self.textbox_songName, 1, 1)
-        self.layout.addWidget(self.label_modelList, 2, 0)
-        self.layout.addWidget(self.modelList, 2, 1)
-        self.layout.addWidget(self.label_numInferenceSteps, 3, 0)
-        self.layout.addWidget(self.textbox_numInferenceSteps, 3, 1)
-        self.layout.addWidget(self.label_extra_prompt, 4, 0)
-        self.layout.addWidget(self.textbox_extra_prompt, 4, 1)
-        self.layout.addWidget(self.label_info, 5, 0)
-        self.layout.addWidget(self.textbox_info, 5, 1)
-        self.layout.addWidget(self.loading_bar, 6, 0, 1, -1)
-        self.layout.addWidget(self.button_generate, 7, 1)
-        self.layout.addWidget(self.button_settings, 7, 0)
+        self.setupLayout()
 
         self.setLayout(self.layout)
+
+    def setupLayout(self):
+        # Create layout and add widgets
+        self.layout = QtWidgets.QGridLayout()
+
+        columnSpan = 2
+
+        self.layout.addWidget(self.textbox_artistName, 0, 1, 1, columnSpan)
+        self.layout.addWidget(self.label_artistName, 0, 0)
+        self.layout.addWidget(self.label_songName, 1, 0)
+        self.layout.addWidget(self.textbox_songName, 1, 1, 1, columnSpan)
+        self.layout.addWidget(self.label_modelList, 2, 0)
+        self.layout.addWidget(self.modelList, 2, 1, 1, columnSpan)
+        self.layout.addWidget(self.label_numInferenceSteps, 3, 0)
+        self.layout.addWidget(
+            self.textbox_numInferenceSteps, 3, 1, 1, columnSpan)
+        self.layout.addWidget(self.label_extra_prompt, 4, 0)
+        self.layout.addWidget(self.textbox_extra_prompt, 4, 1, 1, columnSpan)
+        self.layout.addWidget(self.label_info, 5, 0)
+        self.layout.addWidget(self.textbox_info, 5, 1, 1, columnSpan)
+        self.layout.addWidget(self.loading_bar, 6, 0, 1, -1)
+        self.layout.addWidget(self.button_generate_images, 7, 0)
+        self.layout.addWidget(self.button_generate_video, 7, 1)
+        self.layout.addWidget(self.button_settings, 7, 2)
 
     def showSettings(self):
         self.settingsWidget = SettingsWidget()
@@ -221,7 +233,7 @@ class LyricsGeneratorWidget(QtWidgets.QWidget):
         self.settingsWidget.resize(600, 100)
         self.settingsWidget.setWindowTitle("Settings")
 
-    def L2I(self):
+    def run_L2I(self):
         try:
             songName = self.textbox_songName.text()
             artistName = self.textbox_artistName.text()
@@ -250,6 +262,30 @@ class LyricsGeneratorWidget(QtWidgets.QWidget):
 
             lyrics2Images.Lyrics2Images.run(song_name=songName, artist_name=artistName, prompt=self.textbox_extra_prompt.text(),
                                             model_id=model_id, num_inference_steps=num_inference_steps, uiWidget=self)
+        except Exception as e:
+            BasicUI.HandleError(e)
+            self.loading_bar.setValue(0)
+
+    def run_I2V(self):
+        try:
+            # Ask the user to select the images directory
+            imagesPath = QtWidgets.QFileDialog.getExistingDirectory(
+                self, "Which directory contains the images?")
+
+            if not imagesPath or len(imagesPath) < 1:
+                return
+
+            # outputFileName should be the same as the last folder in imagesPath
+            outputFileName = os.path.basename(os.path.normpath(imagesPath))
+
+            outputPath = os.path.join(
+                settings.OutputPath.getOutputPath(), "videos")
+
+            i2v = images2Video.Images2Video(
+                imagesPath=imagesPath, outputPath=outputPath, outputFileName=outputFileName, uiWidget=self)
+
+            i2v.generate()
+
         except Exception as e:
             BasicUI.HandleError(e)
             self.loading_bar.setValue(0)
