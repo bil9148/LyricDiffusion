@@ -169,3 +169,4 @@ log.txt
 *.mp4
 images/
 videos/
+nuitka-crash-report.xml
