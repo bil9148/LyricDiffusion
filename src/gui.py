@@ -2,7 +2,7 @@ import sys
 from typing import Optional
 from PySide6 import QtCore, QtWidgets, QtGui
 from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QWidget
+from PySide6.QtWidgets import QWidget, QTabWidget
 import lyrics2Images
 import images2Video
 import settings as settings
@@ -110,6 +110,205 @@ class BasicUI:
         return button
 
 
+class Lyrics2ImagesTab(QtWidgets.QWidget):
+    def __init__(self):
+        super().__init__()
+
+        # Create widgets and set common font
+        self.label_songName = BasicUI.create_label("Song name:")
+        self.label_artistName = BasicUI.create_label("Artist name:")
+        self.textbox_songName = BasicUI.create_textbox(
+            placeholder_text="e.g. Gangsta's Paradise")
+        self.textbox_artistName = BasicUI.create_textbox(
+            placeholder_text="e.g. Coolio")
+        self.label_modelList = BasicUI.create_label("Model:")
+        self.label_numInferenceSteps = BasicUI.create_label(
+            "Num. inference steps:")
+        self.textbox_numInferenceSteps = BasicUI.create_textbox(text="20")
+        self.label_extra_prompt = BasicUI.create_label("Extra prompt:")
+        self.textbox_extra_prompt = BasicUI.create_textbox(
+            placeholder_text="e.g. dark ambiance, best quality, extremely detailed, epic")
+        self.label_info = BasicUI.create_label("Info:")
+        self.textbox_info = BasicUI.create_textbox(read_only=True)
+        self.loading_bar = BasicUI.create_progress_bar()
+
+        itemList = utils.HuggingFace.get_all_model_names(
+            limit=30, direction=-1, sort="downloads")
+        if itemList is None or len(itemList) < 1:
+            itemList = ["stabilityai/stable-diffusion-2-1", "stabilityai/sdxl-turbo", "Lykon/dreamshaper-xl-turbo",
+                        "DGSpitzer/Cyberpunk-Anime-Diffusion", "SG161222/Realistic_Vision_V2.0", "stabilityai/sd-turbo",
+                        "SG161222/Realistic_Vision_V6.0_B1_noVAE", "Lykon/DreamShaper", "dataautogpt3/OpenDalleV1.1",]
+        # Sort the list alphabetically
+        itemList.sort()
+        # self.modelList = BasicUI.create_combo_box(itemList=itemList)
+        self.modelList = BasicUI.create_searchable_combobox(itemList=itemList)
+
+        self.button_generate_images = BasicUI.create_button("Generate images")
+        self.button_settings = BasicUI.create_button("Settings")
+
+        # Connect button signals
+        self.button_generate_images.clicked.connect(self.run_L2I)
+        self.button_settings.clicked.connect(self.showSettings)
+
+        self.setupLayout()
+
+        self.setLayout(self.layout)
+
+    def setupLayout(self):
+        # Create layout and add widgets
+        self.layout = QtWidgets.QGridLayout()
+
+        self.layout.addWidget(self.textbox_artistName, 0, 1)
+        self.layout.addWidget(self.label_artistName, 0, 0)
+        self.layout.addWidget(self.label_songName, 1, 0)
+        self.layout.addWidget(self.textbox_songName, 1, 1)
+        self.layout.addWidget(self.label_modelList, 2, 0)
+        self.layout.addWidget(self.modelList, 2, 1)
+        self.layout.addWidget(self.label_numInferenceSteps, 3, 0)
+        self.layout.addWidget(
+            self.textbox_numInferenceSteps, 3, 1)
+        self.layout.addWidget(self.label_extra_prompt, 4, 0)
+        self.layout.addWidget(self.textbox_extra_prompt, 4, 1)
+        self.layout.addWidget(self.label_info, 5, 0)
+        self.layout.addWidget(self.textbox_info, 5, 1)
+        self.layout.addWidget(self.loading_bar, 6, 0, 1, -1)
+        self.layout.addWidget(self.button_generate_images, 7, 1)
+        self.layout.addWidget(self.button_settings, 7, 0)
+
+    def showSettings(self):
+        self.settingsWidget = SettingsWidget()
+        self.settingsWidget.show()
+
+        self.settingsWidget.resize(600, 100)
+        self.settingsWidget.setWindowTitle("Settings")
+
+    def run_L2I(self):
+        try:
+            songName = self.textbox_songName.text()
+            artistName = self.textbox_artistName.text()
+
+            model_id = self.modelList.currentText()
+
+            if not self.textbox_numInferenceSteps.text(
+            ) or not self.textbox_numInferenceSteps.text().isnumeric():
+                raise Exception("Number of inference steps cannot be empty")
+
+            # Validate the input
+            if not songName or len(songName) < 1:
+                raise Exception("Song name cannot be empty")
+
+            if not artistName or len(artistName) < 1:
+                raise Exception("Artist name cannot be empty")
+
+            if not model_id or len(model_id) < 1:
+                raise Exception("Model ID cannot be empty")
+
+            num_inference_steps = int(self.textbox_numInferenceSteps.text())
+
+            if not num_inference_steps or num_inference_steps < 1 or num_inference_steps > 100:
+                raise Exception(
+                    "Number of inference steps must be between 1 and 100")
+
+            lyrics2Images.Lyrics2Images.run(song_name=songName, artist_name=artistName, prompt=self.textbox_extra_prompt.text(),
+                                            model_id=model_id, num_inference_steps=num_inference_steps, uiWidget=self)
+        except Exception as e:
+            BasicUI.HandleError(e)
+            self.loading_bar.setValue(0)
+
+
+class ImagesToVideoTab(QtWidgets.QWidget):
+
+    def __init__(self):
+        super().__init__()
+
+        # Create widgets and set common font
+        self.label_images_path = BasicUI.create_label("Images path:")
+
+        self.textbox_images_path = BasicUI.create_textbox(
+            read_only=True, placeholder_text="e.g. C:/Users/JohnDoe/Desktop/images")
+
+        self.button_browse_images_path = BasicUI.create_button("Browse")
+
+        self.loading_bar = BasicUI.create_progress_bar()
+
+        self.button_generate_video = BasicUI.create_button("Generate video")
+
+        # Connect button signals
+        self.button_generate_video.clicked.connect(self.run_I2V)
+        self.button_browse_images_path.clicked.connect(self.browseImagesPath)
+
+        self.setupLayout()
+
+        self.setLayout(self.layout)
+
+    def setupLayout(self):
+        # Create layout and add widgets
+        self.layout = QtWidgets.QGridLayout()
+
+        self.layout.addWidget(self.label_images_path, 0, 0)
+        self.layout.addWidget(self.textbox_images_path, 0, 1)
+        self.layout.addWidget(self.button_browse_images_path, 0, 2)
+        self.layout.addWidget(self.loading_bar, 1, 0, 1, -1)
+        self.layout.addWidget(self.button_generate_video, 2, 1)
+
+    def browseImagesPath(self):
+        temp = QtWidgets.QFileDialog.getExistingDirectory(
+            self, "Select images path")
+
+        if temp:
+            self.textbox_images_path.setText(temp)
+
+    def run_I2V(self):
+        try:
+            imagesPath = self.textbox_images_path.text()
+
+            # Validate the input
+
+            if not imagesPath or len(imagesPath) < 1:
+                raise Exception("Images path cannot be empty")
+
+            folderName = os.path.basename(
+                os.path.normpath(imagesPath)).rstrip()
+            # outputFileName should be the same as the last folder in imagesPath
+            outputFileName = f"{folderName}.mp4"
+
+            outputPath = os.path.join(
+                settings.OutputPath.getOutputPath(), "videos")
+
+            i2v = images2Video.Images2Video(
+                imagesPath=imagesPath, outputPath=outputPath, outputFileName=outputFileName, uiWidget=self)
+
+            i2v.generate()
+
+        except Exception as e:
+            BasicUI.HandleError(e)
+            self.loading_bar.setValue(0)
+
+
+class MainWidget(QtWidgets.QWidget):
+    def __init__(self):
+        super().__init__()
+
+        self.tabWidget = QTabWidget()
+        self.tabWidget.addTab(Lyrics2ImagesTab(), "Lyrics2Images")
+        self.tabWidget.addTab(ImagesToVideoTab(), "Images2Video")
+
+        self.layout = QtWidgets.QGridLayout()
+        self.layout.addWidget(self.tabWidget)
+        self.setLayout(self.layout)
+
+
+class LyricsGeneratorApp(QtWidgets.QMainWindow):
+    def __init__(self):
+        super().__init__()
+
+        self.central_widget = MainWidget()
+        self.setCentralWidget(self.central_widget)
+
+        self.resize(700, 350)
+        self.setWindowTitle("Lyrics2Images")
+
+
 class SettingsWidget(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
@@ -154,154 +353,6 @@ class SettingsWidget(QtWidgets.QWidget):
             settings.OutputPath.setOutputPath(temp)
             temp = settings.OutputPath.getOutputPath()
             self.textbox_outputPath.setText(temp)
-
-
-class LyricsGeneratorWidget(QtWidgets.QWidget):
-    def __init__(self):
-        super().__init__()
-
-        # Create widgets and set common font
-        self.label_songName = BasicUI.create_label("Song name:")
-        self.label_artistName = BasicUI.create_label("Artist name:")
-        self.textbox_songName = BasicUI.create_textbox(
-            placeholder_text="e.g. Gangsta's Paradise")
-        self.textbox_artistName = BasicUI.create_textbox(
-            placeholder_text="e.g. Coolio")
-        self.label_modelList = BasicUI.create_label("Model:")
-        self.label_numInferenceSteps = BasicUI.create_label(
-            "Num. inference steps:")
-        self.textbox_numInferenceSteps = BasicUI.create_textbox(text="20")
-        self.label_extra_prompt = BasicUI.create_label("Extra prompt:")
-        self.textbox_extra_prompt = BasicUI.create_textbox(
-            placeholder_text="e.g. dark ambiance, best quality, extremely detailed, epic")
-        self.label_info = BasicUI.create_label("Info:")
-        self.textbox_info = BasicUI.create_textbox(read_only=True)
-        self.loading_bar = BasicUI.create_progress_bar()
-
-        itemList = utils.HuggingFace.get_all_model_names(
-            limit=30, direction=-1, sort="downloads")
-        if itemList is None or len(itemList) < 1:
-            itemList = ["stabilityai/stable-diffusion-2-1", "stabilityai/sdxl-turbo", "Lykon/dreamshaper-xl-turbo",
-                        "DGSpitzer/Cyberpunk-Anime-Diffusion", "SG161222/Realistic_Vision_V2.0", "stabilityai/sd-turbo",
-                        "SG161222/Realistic_Vision_V6.0_B1_noVAE", "Lykon/DreamShaper", "dataautogpt3/OpenDalleV1.1",]
-        # Sort the list alphabetically
-        itemList.sort()
-        # self.modelList = BasicUI.create_combo_box(itemList=itemList)
-        self.modelList = BasicUI.create_searchable_combobox(itemList=itemList)
-
-        self.button_generate_images = BasicUI.create_button("Generate images")
-        self.button_generate_video = BasicUI.create_button("Generate video")
-        self.button_settings = BasicUI.create_button("Settings")
-
-        # Connect button signals
-        self.button_generate_images.clicked.connect(self.run_L2I)
-        self.button_generate_video.clicked.connect(self.run_I2V)
-        self.button_settings.clicked.connect(self.showSettings)
-
-        self.setupLayout()
-
-        self.setLayout(self.layout)
-
-    def setupLayout(self):
-        # Create layout and add widgets
-        self.layout = QtWidgets.QGridLayout()
-
-        columnSpan = 2
-
-        self.layout.addWidget(self.textbox_artistName, 0, 1, 1, columnSpan)
-        self.layout.addWidget(self.label_artistName, 0, 0)
-        self.layout.addWidget(self.label_songName, 1, 0)
-        self.layout.addWidget(self.textbox_songName, 1, 1, 1, columnSpan)
-        self.layout.addWidget(self.label_modelList, 2, 0)
-        self.layout.addWidget(self.modelList, 2, 1, 1, columnSpan)
-        self.layout.addWidget(self.label_numInferenceSteps, 3, 0)
-        self.layout.addWidget(
-            self.textbox_numInferenceSteps, 3, 1, 1, columnSpan)
-        self.layout.addWidget(self.label_extra_prompt, 4, 0)
-        self.layout.addWidget(self.textbox_extra_prompt, 4, 1, 1, columnSpan)
-        self.layout.addWidget(self.label_info, 5, 0)
-        self.layout.addWidget(self.textbox_info, 5, 1, 1, columnSpan)
-        self.layout.addWidget(self.loading_bar, 6, 0, 1, -1)
-        self.layout.addWidget(self.button_generate_images, 7, 0)
-        self.layout.addWidget(self.button_generate_video, 7, 1)
-        self.layout.addWidget(self.button_settings, 7, 2)
-
-    def showSettings(self):
-        self.settingsWidget = SettingsWidget()
-        self.settingsWidget.show()
-
-        self.settingsWidget.resize(600, 100)
-        self.settingsWidget.setWindowTitle("Settings")
-
-    def run_L2I(self):
-        try:
-            songName = self.textbox_songName.text()
-            artistName = self.textbox_artistName.text()
-
-            model_id = self.modelList.currentText()
-
-            if not self.textbox_numInferenceSteps.text(
-            ) or not self.textbox_numInferenceSteps.text().isnumeric():
-                raise Exception("Number of inference steps cannot be empty")
-
-            # Validate the input
-            if not songName or len(songName) < 1:
-                raise Exception("Song name cannot be empty")
-
-            if not artistName or len(artistName) < 1:
-                raise Exception("Artist name cannot be empty")
-
-            if not model_id or len(model_id) < 1:
-                raise Exception("Model ID cannot be empty")
-
-            num_inference_steps = int(self.textbox_numInferenceSteps.text())
-
-            if not num_inference_steps or num_inference_steps < 1 or num_inference_steps > 100:
-                raise Exception(
-                    "Number of inference steps must be between 1 and 100")
-
-            lyrics2Images.Lyrics2Images.run(song_name=songName, artist_name=artistName, prompt=self.textbox_extra_prompt.text(),
-                                            model_id=model_id, num_inference_steps=num_inference_steps, uiWidget=self)
-        except Exception as e:
-            BasicUI.HandleError(e)
-            self.loading_bar.setValue(0)
-
-    def run_I2V(self):
-        try:
-            # Ask the user to select the images directory
-            imagesPath = QtWidgets.QFileDialog.getExistingDirectory(
-                self, "Which directory contains the images?")
-
-            if not imagesPath or len(imagesPath) < 1:
-                return
-
-            folderName = os.path.basename(
-                os.path.normpath(imagesPath)).rstrip()
-            # outputFileName should be the same as the last folder in imagesPath
-            outputFileName = f"{folderName}.mp4"
-
-            outputPath = os.path.join(
-                settings.OutputPath.getOutputPath(), "videos")
-
-            i2v = images2Video.Images2Video(
-                imagesPath=imagesPath, outputPath=outputPath, outputFileName=outputFileName, uiWidget=self)
-
-            i2v.generate()
-
-        except Exception as e:
-            BasicUI.HandleError(e)
-            self.loading_bar.setValue(0)
-
-
-class LyricsGeneratorApp(QtWidgets.QMainWindow):
-    def __init__(self):
-        super().__init__()
-
-        self.central_widget = LyricsGeneratorWidget()
-        self.setCentralWidget(self.central_widget)
-
-        self.resize(600, 300)
-        self.setWindowTitle("Lyrics2Images")
 
 
 def showGUI():
