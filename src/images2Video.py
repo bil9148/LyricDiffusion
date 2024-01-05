@@ -1,8 +1,9 @@
 import os
-import cv2
 from tqdm import tqdm
 from PyQt5 import QtWidgets
 import gui
+import logging
+import cv2
 
 
 class Images2Video:
@@ -12,7 +13,7 @@ class Images2Video:
         self.outputFileName: str = outputFileName
         self.uiWidget = uiWidget
 
-    def get_images(self):
+    def get_read_images(self):
         # Check if the images path exists
         if not os.path.exists(self.imagesPath):
             raise Exception("Images path does not exist.")
@@ -22,65 +23,53 @@ class Images2Video:
         # Check if there are any images in the images path
         for file in os.listdir(self.imagesPath):
             if file.endswith(".png"):
-                images.append(os.path.join(self.imagesPath, file))
 
-        if not images or len(images) == 0:
-            raise Exception("No images found.")
+                # If size is < 1, skip the image
+                read_img = cv2.imread(os.path.join(self.imagesPath, file))
 
-        # Sort the images by name
-        images.sort(key=lambda f: int(
-            os.path.splitext(os.path.basename(f))[0]))
+                if read_img is None or read_img.size < 1:
+                    continue
+
+                images.append(read_img)
 
         return images
 
     def generate(self):
         try:
             """Generates a video from the images in the given path"""
+
+            logging.info(
+                f"Generating video from images in {self.imagesPath}...")
+
             # Create the output directory
             os.makedirs(self.outputPath, exist_ok=True)
 
             # Get all the images in the given path
-            images = self.get_images()
+            read_Images = self.get_read_images()
 
-            # Find the first valid image
-            while images and os.path.getsize(images[0]) < 100:
-                images.pop(0)
+            if not read_Images or len(read_Images) == 0:
+                raise Exception("No images found.")
 
-            if not images or os.path.getsize(images[0]) < 100:
-                raise Exception("No valid images found.")
-
-            # Get the image size
-            img = cv2.imread(images[0])
-
-            if img is None:
-                raise Exception("Could not read the image.")
-
-            height, width, layers = img.shape
+            height, width, layers = read_Images[0].shape
 
             # Create the video writer with appropriate codec
-            # You can try 'mp4v', 'XVID', 'MJPG', or 'H264'
-            fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-            video = cv2.VideoWriter(os.path.join(
-                self.outputPath, self.outputFileName), fourcc, 1, (width, height))
+            video = cv2.VideoWriter(
+                os.path.join(self.outputPath, self.outputFileName), cv2.VideoWriter_fourcc(*'mp4v'), 24, (width, height))
 
             if self.uiWidget is not None:
-                self.uiWidget.loading_bar.setMaximum(len(images))
+                self.uiWidget.loading_bar.setMaximum(len(read_Images))
                 self.uiWidget.loading_bar.setValue(0)
 
-            # Add each image to the video
-            for image in tqdm(images):
+            # Add each image to the video using imageio
+            for read_img in read_Images:
                 try:
-                    read_img = cv2.imread(image)
-
-                    if read_img is None or read_img.size < 1:
-                        continue
-
+                    # Write to the video
                     video.write(read_img)
 
                     # Update the UI
                     if self.uiWidget is not None:
                         self.uiWidget.textbox_info.setText(
-                            f"Processing {image}")
+                            f"Processing {read_img}")
 
                         # Force UI update
                         QtWidgets.QApplication.processEvents()
@@ -88,14 +77,12 @@ class Images2Video:
                 except Exception as e:
                     gui.BasicUI.HandleError(e)
 
-            # Release the video writer
             video.release()
 
             if self.uiWidget is not None:
                 self.uiWidget.loading_bar.setValue(
                     self.uiWidget.loading_bar.maximum())
-                self.uiWidget.textbox_info.setText(
-                    f"Done.")
+                self.uiWidget.textbox_info.setText("Done")
 
         except Exception as e:
             gui.BasicUI.HandleError(e)
