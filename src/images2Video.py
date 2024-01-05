@@ -62,12 +62,6 @@ class Images2Video:
         try:
             """Generates a video from the images in the given path"""
 
-            logging.info(
-                f"Generating video from images in {self.imagesPath}...")
-
-            # Create the output directory
-            os.makedirs(self.outputPath, exist_ok=True)
-
             # Get all the images in the given path
             read_Images = self.get_read_images()
 
@@ -75,6 +69,12 @@ class Images2Video:
                 raise Exception("No images found.")
 
             height, width, layers = read_Images[0].shape
+
+            # Create the output directory
+            os.makedirs(self.outputPath, exist_ok=True)
+
+            logging.info(
+                f"Starting video generation at {self.outputPath}.\nVideo name: {self.outputFileName}.\nVideo FPS: {self.fps}.\nVideo codec: {self.fourcc}")
 
             # Create the video writer with appropriate codec
             video = cv2.VideoWriter(
