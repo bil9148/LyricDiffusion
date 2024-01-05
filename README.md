@@ -49,6 +49,10 @@ Install Dependencies:
 
     pip install -r requirements.txt
 
+PyTorch - 12.1 (https://pytorch.org/get-started/locally/)
+
+    pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+
 Run the Application:
 
     python main.py
@@ -68,14 +72,6 @@ The image generation works only on NVIDIA GPUs.
 Nuitka - 1.9.6
 
 Python - 3.10
-
-PyTorch - 12.1 (https://pytorch.org/get-started/locally/)
-
-    pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
-
-The rest is in the requirements.txt file.
-
-    pip install -r requirements.txt
 
 <h2>Issues</h2>
 
