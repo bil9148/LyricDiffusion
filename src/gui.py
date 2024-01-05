@@ -228,10 +228,9 @@ class LyricsGeneratorWidget(QtWidgets.QWidget):
 
             model_id = self.modelList.currentText()
 
-            assert self.textbox_numInferenceSteps.text(
-            ) and self.textbox_numInferenceSteps.text().isnumeric(), "Number of inference steps must be a number"
-
-            num_inference_steps = int(self.textbox_numInferenceSteps.text())
+            if not self.textbox_numInferenceSteps.text(
+            ) or not self.textbox_numInferenceSteps.text().isnumeric():
+                raise Exception("Number of inference steps cannot be empty")
 
             # Validate the input
             if not songName or len(songName) < 1:
@@ -242,6 +241,8 @@ class LyricsGeneratorWidget(QtWidgets.QWidget):
 
             if not model_id or len(model_id) < 1:
                 raise Exception("Model ID cannot be empty")
+
+            num_inference_steps = int(self.textbox_numInferenceSteps.text())
 
             if not num_inference_steps or num_inference_steps < 1 or num_inference_steps > 100:
                 raise Exception(
