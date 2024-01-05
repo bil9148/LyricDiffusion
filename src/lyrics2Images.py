@@ -124,32 +124,33 @@ class Lyrics2Images:
             uiWidget.loading_bar.setValue(uiWidget.loading_bar.maximum())
             uiWidget.textbox_info.setText("Done")
 
+    @staticmethod
+    def run(song_name, artist_name, model_id, num_inference_steps, uiWidget, prompt=""):
+        """Runs the model on the given song and artist and saves the images to the output path"""
+        try:
+            # Get the lyrics
+            verses = getLyrics(song_name, artist_name, askIfCorrect=True)
 
-def run(song_name, artist_name, model_id, num_inference_steps, uiWidget, prompt=""):
-    """Runs the program"""
-    try:
-        # Get the lyrics
-        verses = getLyrics(song_name, artist_name, askIfCorrect=True)
+            if verses is None or len(verses) == 0:
+                return
 
-        if verses is None or len(verses) == 0:
-            return
+            l2i = lyrics2Images.Lyrics2Images(
+                num_inference_steps=num_inference_steps,
+                torch_dtype=torch.float16,
+                use_auth_token=False,
+                model_id=model_id,
+                prompt=prompt
+            )
 
-        l2i = lyrics2Images.Lyrics2Images(
-            num_inference_steps=num_inference_steps,
-            torch_dtype=torch.float16,
-            use_auth_token=False,
-            model_id=model_id,
-            prompt=prompt
-        )
+            output_path = os.path.join(
+                settings.OutputPath.getOutputPath(), "images", f"{song_name} - {artist_name}")
 
-        output_path = os.path.join(
-            settings.OutputPath.getOutputPath(), "images", f"{song_name} - {artist_name}")
+            settings.logging.info(
+                f"Starting generation for {song_name} by {artist_name}.\nModel: {model_id}.\nOutput path: {output_path}\nTorch dtype: {l2i.torch_dtype}\nNum inference steps: {l2i.num_inference_steps}\nExtra prompt: {l2i.prompt}")
 
-        settings.logging.info(
-            f"Starting generation for {song_name} by {artist_name}.\nModel: {model_id}.\nOutput path: {output_path}\nTorch dtype: {l2i.torch_dtype}\nNum inference steps: {l2i.num_inference_steps}\nExtra prompt: {l2i.prompt}")
+            # Run the model
+            l2i.generate(verses=verses, output_path=output_path,
+                         uiWidget=uiWidget)
 
-        # Run the model
-        l2i.generate(verses=verses, output_path=output_path, uiWidget=uiWidget)
-
-    except Exception as e:
-        gui.BasicUI.HandleError(e)
+        except Exception as e:
+            gui.BasicUI.HandleError(e)

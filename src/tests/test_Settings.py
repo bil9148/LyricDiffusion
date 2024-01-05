@@ -1,6 +1,5 @@
 import unittest
 from unittest.mock import patch
-import logging
 from settings import OutputPath, SkipEmptyVerses, Logger
 
 
