@@ -275,8 +275,10 @@ class LyricsGeneratorWidget(QtWidgets.QWidget):
             if not imagesPath or len(imagesPath) < 1:
                 return
 
+            folderName = os.path.basename(
+                os.path.normpath(imagesPath)).rstrip()
             # outputFileName should be the same as the last folder in imagesPath
-            outputFileName = os.path.basename(os.path.normpath(imagesPath))
+            outputFileName = f"{folderName}.mp4"
 
             outputPath = os.path.join(
                 settings.OutputPath.getOutputPath(), "videos")
