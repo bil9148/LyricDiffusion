@@ -20,8 +20,13 @@ class Images2Video:
 
         images = []
 
+        files = os.listdir(self.imagesPath)
+
+        # Sort the files by name
+        files.sort(key=lambda f: int(os.path.splitext(os.path.basename(f))[0]))
+
         # Check if there are any images in the images path
-        for file in os.listdir(self.imagesPath):
+        for file in files:
             if file.endswith(".png"):
 
                 # If size is < 1, skip the image
@@ -54,7 +59,7 @@ class Images2Video:
 
             # Create the video writer with appropriate codec
             video = cv2.VideoWriter(
-                os.path.join(self.outputPath, self.outputFileName), cv2.VideoWriter_fourcc(*'mp4v'), 24, (width, height))
+                os.path.join(self.outputPath, self.outputFileName), cv2.VideoWriter_fourcc(*'mp4v'), 12, (width, height))
 
             if self.uiWidget is not None:
                 self.uiWidget.loading_bar.setMaximum(len(read_Images))
