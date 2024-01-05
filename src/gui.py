@@ -94,14 +94,16 @@ class BasicUI:
         return progress_bar
 
     @staticmethod
-    def create_combo_box(itemList: Optional[list] = None):
-        model_list = QtWidgets.QComboBox()
+    def create_combo_box(itemList: Optional[list] = None, editable=True):
+        combobox = QtWidgets.QComboBox()
 
         if itemList is not None:
-            model_list.addItems(itemList)
+            combobox.addItems(itemList)
 
-        model_list.setFont(FontManager.getFont())
-        return model_list
+        combobox.setEditable(editable)
+
+        combobox.setFont(FontManager.getFont())
+        return combobox
 
     @staticmethod
     def create_button(text):
@@ -233,6 +235,11 @@ class ImagesToVideoTab(QtWidgets.QWidget):
 
         self.button_browse_images_path = BasicUI.create_button("Browse")
 
+        self.label_video_format = BasicUI.create_label("Video format:")
+        self.combobox_video_format = BasicUI.create_combo_box(
+            itemList=["mp4", "avi"], editable=False
+        )
+
         self.loading_bar = BasicUI.create_progress_bar()
 
         self.button_generate_video = BasicUI.create_button("Generate video")
@@ -256,8 +263,11 @@ class ImagesToVideoTab(QtWidgets.QWidget):
         self.layout.addWidget(self.label_video_speed, 1, 0)
         self.layout.addWidget(self.textbox_video_speed, 1, 1)
 
-        self.layout.addWidget(self.loading_bar, 2, 0, 1, -1)
-        self.layout.addWidget(self.button_generate_video, 3, 1)
+        self.layout.addWidget(self.label_video_format, 2, 0)
+        self.layout.addWidget(self.combobox_video_format, 2, 1)
+
+        self.layout.addWidget(self.loading_bar, 3, 0, 1, -1)
+        self.layout.addWidget(self.button_generate_video, 4, 1)
 
     def browseImagesPath(self):
         temp = QtWidgets.QFileDialog.getExistingDirectory(
@@ -275,10 +285,15 @@ class ImagesToVideoTab(QtWidgets.QWidget):
             if not imagesPath or len(imagesPath) < 1:
                 raise Exception("Images path cannot be empty")
 
+            if not self.combobox_video_format.currentText():
+                raise Exception("Video format cannot be empty")
+
+            selectedFormat = self.combobox_video_format.currentText()
+
             folderName = os.path.basename(
                 os.path.normpath(imagesPath)).rstrip()
             # outputFileName should be the same as the last folder in imagesPath
-            outputFileName = f"{folderName}.mp4"
+            outputFileName = f"{folderName}.{self.combobox_video_format.currentText()}"
 
             outputPath = os.path.join(
                 settings.OutputPath.getOutputPath(), "videos")
@@ -292,8 +307,10 @@ class ImagesToVideoTab(QtWidgets.QWidget):
                 raise Exception(
                     "Video speed must be a number between 1 and 60")
 
+            fourcc = images2Video.Images2Video.get_fourcc_for(selectedFormat)
+
             i2v = images2Video.Images2Video(
-                imagesPath=imagesPath, outputPath=outputPath, outputFileName=outputFileName, fps=fps, uiWidget=self)
+                imagesPath=imagesPath, outputPath=outputPath, outputFileName=outputFileName, fourcc=fourcc, fps=fps, uiWidget=self)
 
             i2v.generate()
 
