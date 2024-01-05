@@ -1,6 +1,6 @@
 import os
 from tqdm import tqdm
-from PyQt5 import QtWidgets
+from PySide6 import QtWidgets
 import gui
 import logging
 import cv2
