@@ -261,10 +261,10 @@ class ImagesToVideoTab(QtWidgets.QWidget):
         self.layout.addWidget(self.button_browse_images_path, 0, 2)
 
         self.layout.addWidget(self.label_video_speed, 1, 0)
-        self.layout.addWidget(self.textbox_video_speed, 1, 1)
+        self.layout.addWidget(self.textbox_video_speed, 1, 1, 1, -1)
 
         self.layout.addWidget(self.label_video_format, 2, 0)
-        self.layout.addWidget(self.combobox_video_format, 2, 1)
+        self.layout.addWidget(self.combobox_video_format, 2, 1, 1, -1)
 
         self.layout.addWidget(self.loading_bar, 3, 0, 1, -1)
         self.layout.addWidget(self.button_generate_video, 4, 1)
