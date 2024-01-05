@@ -6,7 +6,7 @@ from torch import autocast
 # from diffusers import StableDiffusionPipeline
 from diffusers import AutoPipelineForText2Image
 import lyrics2Images
-from lyricExtractor import getLyrics
+from geniusAPI import getLyrics
 import settings as settings
 from PySide6 import QtWidgets
 import gui

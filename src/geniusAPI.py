@@ -9,8 +9,6 @@ def getLyrics(songName: str, artistName: str, askIfCorrect: bool = False):
     """Returns the lyrics of a song given the song name and artist name"""
 
     try:
-        genius = Genius(GENIUSAPIKEY)
-
         song = getSong(songName, artistName, askIfCorrect=askIfCorrect)
 
         if song is None:
