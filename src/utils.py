@@ -1,6 +1,6 @@
 from typing import List
 import shutil
-from huggingface_hub import notebook_login, HfApi, ModelFilter
+from huggingface_hub import HfApi, ModelFilter  # notebook_login
 import gui
 
 
@@ -27,9 +27,9 @@ class HuggingFace:
             gui.BasicUI.HandleError(e)
             return None
 
-    @staticmethod
-    def auth_hugging_face():
-        notebook_login()
+    # @staticmethod
+    # def auth_hugging_face():
+    #     notebook_login()
 
 
 def parse_lyrics(path: str, prompt: str) -> List[str]:

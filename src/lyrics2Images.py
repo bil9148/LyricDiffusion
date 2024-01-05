@@ -27,8 +27,8 @@ class Lyrics2Images:
         self.num_inference_steps = num_inference_steps
         self.use_auth_token = use_auth_token
 
-        if self.use_auth_token:
-            utils.HuggingFace.auth_hugging_face()
+        # if self.use_auth_token:
+        #     utils.HuggingFace.auth_hugging_face()
 
     def load_model_pipeline(self) -> AutoPipelineForText2Image:
         pass
