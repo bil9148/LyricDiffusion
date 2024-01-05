@@ -63,6 +63,18 @@ If you'd like to contribute to LyricDiffusion, feel free to fork the repository,
 
 The image generation works only on NVIDIA GPUs.
 
+<h2>Dependencies</h2>
+
+Nuitka - 1.9.6
+
+Python - 3.10
+
+PyTorch - 12.1 (https://pytorch.org/get-started/locally/)
+
+    pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+
+The rest is in the requirements.txt file.
+
 <h2>Issues</h2>
 
 Encountered a bug or have a suggestion? Open an issue on the repository to help improve LyricDiffusion.
