@@ -342,6 +342,27 @@ class LyricsGeneratorApp(QtWidgets.QMainWindow):
         self.resize(700, 350)
         self.setWindowTitle("Lyrics2Images")
 
+        Icons.setupIcons(self=self)
+
+
+class Icons:
+    @staticmethod
+    def setupIcons(self):
+        # Get the absolute path to the script's directory
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+
+        # Construct the absolute path to the icons directory
+        iconsPath = os.path.join(script_dir, "../resources/icons")
+
+        app_icon = QtGui.QIcon()
+        app_icon.addFile(f'{iconsPath}/16.png', QtCore.QSize(16, 16))
+        app_icon.addFile(f'{iconsPath}/24.png', QtCore.QSize(24, 24))
+        app_icon.addFile(f'{iconsPath}/32.png', QtCore.QSize(32, 32))
+        app_icon.addFile(f'{iconsPath}/48.png', QtCore.QSize(48, 48))
+        app_icon.addFile(f'{iconsPath}/256.png', QtCore.QSize(256, 256))
+
+        self.setWindowIcon(app_icon)
+
 
 class SettingsWidget(QtWidgets.QWidget):
     def __init__(self):
@@ -374,6 +395,8 @@ class SettingsWidget(QtWidgets.QWidget):
         self.layout.addWidget(self.checkbox_skipEmptyVerses, 1, 0, 1, -1)
 
         self.setLayout(self.layout)
+
+        Icons.setupIcons(self=self)
 
     def skipEmptyVersesChanged(self):
         settings.SkipEmptyVerses.setSkipEmptyVerses(
