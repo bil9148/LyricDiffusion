@@ -6,6 +6,15 @@ The application provides a user-friendly interface with various customization op
 
 <h2>Examples</h2>
 
+    As I walk through the valley of the shadow of death
+
+![3](https://github.com/bil9148/LyricDiffusion/assets/104930566/8eeffd72-acdf-433a-962b-fce81b253d44)
+
+    'Cause I've been blastin' and laughin' so long that
+    
+![5](https://github.com/bil9148/LyricDiffusion/assets/104930566/b5a94e21-5e75-4d82-98df-5dc198876ba8)
+
+
 <h2>Features</h2>
 
     Genius API Integration: Automatically fetches lyrics for the specified artist and song.
