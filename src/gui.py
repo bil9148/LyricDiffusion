@@ -33,7 +33,7 @@ class BasicUI:
         msg = QtWidgets.QMessageBox()
         msg.setIcon(QtWidgets.QMessageBox.Question)
         msg.setText(text)
-        msg.setWindowTitle("Lyrics2Images")
+        msg.setWindowTitle("LyricDiffusion")
         msg.setStandardButtons(
             QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
         return msg.exec_() == QtWidgets.QMessageBox.Yes
@@ -43,7 +43,7 @@ class BasicUI:
         msg = QtWidgets.QMessageBox()
         msg.setIcon(QtWidgets.QMessageBox.Critical)
         msg.setText(str(e))
-        msg.setWindowTitle("Lyrics2Images")
+        msg.setWindowTitle("LyricDiffusion")
         msg.setStandardButtons(QtWidgets.QMessageBox.Ok)
         msg.exec_()
 
@@ -340,7 +340,7 @@ class LyricsGeneratorApp(QtWidgets.QMainWindow):
         self.setCentralWidget(self.central_widget)
 
         self.resize(700, 350)
-        self.setWindowTitle("Lyrics2Images")
+        self.setWindowTitle("LyricDiffusion")
 
         Icons.setupIcons(self=self)
 
