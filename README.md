@@ -34,6 +34,8 @@ The application provides a user-friendly interface with various customization op
 
     Output Path Configuration: Change the output path where the images and videos will be saved.
 
+    Video FPS: Choose how fast the slideshow should move.
+
     Video Format: Choose in which format the video should be generated.
 
 <h2>Usage</h2>
