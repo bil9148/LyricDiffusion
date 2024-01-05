@@ -49,6 +49,10 @@ Install Dependencies:
 
     pip install -r requirements.txt
 
+PyTorch - 12.1 (https://pytorch.org/get-started/locally/)
+
+    pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+
 Run the Application:
 
     python main.py
@@ -62,6 +66,12 @@ If you'd like to contribute to LyricDiffusion, feel free to fork the repository,
 <h2>Limitations</h2>
 
 The image generation works only on NVIDIA GPUs.
+
+<h2>Build</h2>
+
+Nuitka - 1.9.6
+
+Python - 3.10
 
 <h2>Issues</h2>
 
