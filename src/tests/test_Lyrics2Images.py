@@ -2,23 +2,22 @@ from ..lyrics2Images import Lyrics2Images
 import unittest
 import shutil
 import os
-import src.settings as settings
 
 
 class TestLyrics2Images(unittest.TestCase):
     def setUp(self):
-        self.temp_dir = os.path.join(
-            settings.OutputPath.getOutputPath(), "images", "test")
+        # Setup temp directory
+        self.temp_dir = os.path.join(os.getcwd(), "temp")
         os.makedirs(self.temp_dir, exist_ok=True)
 
     def tearDown(self):
+        # Delete temp directory recursively
         shutil.rmtree(self.temp_dir)
 
     def test_runL2I_with_valid_verses(self):
         # Arrange
         verses = ["Verse 1", "Verse 2"]
-        output_path = os.path.join(
-            settings.OutputPath.getOutputPath(), "images", "test")
+        output_path = os.path.join(self.temp_dir, "test", "images")
 
         # Act
         lyrics2images = Lyrics2Images(use_auth_token=False)
