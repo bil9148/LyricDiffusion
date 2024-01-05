@@ -6,42 +6,53 @@ import gui
 
 
 class Images2Video:
-    def __init__(self, imagesPath, outputPath, uiWidget):
+    def __init__(self, imagesPath, outputPath, outputFileName, uiWidget=None):
         self.imagesPath = imagesPath
         self.outputPath = outputPath
+        self.outputFileName = outputFileName
         self.uiWidget = uiWidget
 
-    def generate(self):
-        """Generates a video from the images in the given path"""
-        # TODO: Finish this
-        pass
+    def get_images(self):
+        # Get the list of images
+        images = [os.path.join(self.imagesPath, f)
+                  for f in os.listdir(self.imagesPath) if f.endswith(".png")]
 
+        if not images:
+            raise Exception("No images found.")
+
+        # Sort the images by name
+        images.sort(key=lambda f: int(
+            os.path.splitext(os.path.basename(f))[0]))
+
+        return images
+
+    def generate(self):
         try:
             """Generates a video from the images in the given path"""
             # Create the output directory
             os.makedirs(self.outputPath, exist_ok=True)
 
-            # Get the list of images
-            images = [os.path.join(self.imagesPath, f)
-                      for f in os.listdir(self.imagesPath) if f.endswith(".png")]
+            # Get all the images in the given path
+            images = self.get_images()
 
-            if images is None or len(images) == 0:
-                raise Exception("No images found.")
+            # Find the first valid image
+            while images and os.path.getsize(images[0]) < 100:
+                images.pop(0)
 
-            # Sort the images by name
-            images.sort(key=lambda f: int(
-                os.path.splitext(os.path.basename(f))[0]))
-
-            # Get the first image
-            image = images[0]
+            if not images or os.path.getsize(images[0]) < 100:
+                raise Exception("No valid images found.")
 
             # Get the image size
-            img = cv2.imread(image)
+            img = cv2.imread(images[0])
+
+            if img is None:
+                raise Exception("Could not read the image.")
+
             height, width, layers = img.shape
 
             # Create the video writer
             video = cv2.VideoWriter(os.path.join(
-                self.outputPath, "video.mp4"), 0, 1, (width, height))
+                self.outputPath, self.outputFileName), 0, 1, (width, height))
 
             if self.uiWidget is not None:
                 self.uiWidget.loading_bar.setMaximum(len(images))
@@ -65,6 +76,5 @@ class Images2Video:
                 self.uiWidget.loading_bar.setValue(
                     self.uiWidget.loading_bar.maximum())
                 self.uiWidget.textbox_info.setText("Done")
-
         except Exception as e:
             gui.BasicUI.HandleError(e)
