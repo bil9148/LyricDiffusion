@@ -234,10 +234,18 @@ class LyricsGeneratorWidget(QtWidgets.QWidget):
             num_inference_steps = int(self.textbox_numInferenceSteps.text())
 
             # Validate the input
-            assert songName and len(songName) > 0, "Song name cannot be empty"
-            assert artistName and len(
-                artistName) > 0, "Artist name cannot be empty"
-            assert num_inference_steps > 0 and num_inference_steps <= 100, "Number of inference steps must be between 1 and 100"
+            if not songName or len(songName) < 1:
+                raise Exception("Song name cannot be empty")
+
+            if not artistName or len(artistName) < 1:
+                raise Exception("Artist name cannot be empty")
+
+            if not model_id or len(model_id) < 1:
+                raise Exception("Model ID cannot be empty")
+
+            if not num_inference_steps or num_inference_steps < 1 or num_inference_steps > 100:
+                raise Exception(
+                    "Number of inference steps must be between 1 and 100")
 
             lyrics2Images.Lyrics2Images.run(song_name=songName, artist_name=artistName, prompt=self.textbox_extra_prompt.text(),
                                             model_id=model_id, num_inference_steps=num_inference_steps, uiWidget=self)
