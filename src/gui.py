@@ -348,20 +348,23 @@ class LyricsGeneratorApp(QtWidgets.QMainWindow):
 class Icons:
     @staticmethod
     def setupIcons(self):
-        # Get the absolute path to the script's directory
-        script_dir = os.path.dirname(os.path.abspath(__file__))
+        try:
+            # Get the absolute path to the script's directory
+            script_dir = os.path.dirname(os.path.abspath(__file__))
 
-        # Construct the absolute path to the icons directory
-        iconsPath = os.path.join(script_dir, "../resources/icons")
+            # Construct the absolute path to the icons directory
+            iconsPath = os.path.join(script_dir, "../resources/icons")
 
-        app_icon = QtGui.QIcon()
-        app_icon.addFile(f'{iconsPath}/16.png', QtCore.QSize(16, 16))
-        app_icon.addFile(f'{iconsPath}/24.png', QtCore.QSize(24, 24))
-        app_icon.addFile(f'{iconsPath}/32.png', QtCore.QSize(32, 32))
-        app_icon.addFile(f'{iconsPath}/48.png', QtCore.QSize(48, 48))
-        app_icon.addFile(f'{iconsPath}/256.png', QtCore.QSize(256, 256))
+            app_icon = QtGui.QIcon()
+            app_icon.addFile(f'{iconsPath}/16.png', QtCore.QSize(16, 16))
+            app_icon.addFile(f'{iconsPath}/24.png', QtCore.QSize(24, 24))
+            app_icon.addFile(f'{iconsPath}/32.png', QtCore.QSize(32, 32))
+            app_icon.addFile(f'{iconsPath}/48.png', QtCore.QSize(48, 48))
+            app_icon.addFile(f'{iconsPath}/256.png', QtCore.QSize(256, 256))
 
-        self.setWindowIcon(app_icon)
+            self.setWindowIcon(app_icon)
+        except Exception as e:
+            BasicUI.HandleError(e, silent=True)
 
 
 class SettingsWidget(QtWidgets.QWidget):
