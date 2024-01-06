@@ -73,7 +73,7 @@ Nuitka - 1.9.6
 
 Python - 3.10
 
-OpenCV - ?
+OpenCV - ??
 
 <h2>Issues</h2>
 
