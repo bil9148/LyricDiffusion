@@ -69,6 +69,8 @@ The image generation works only on NVIDIA GPUs.
 
 <h2>Build</h2>
 
+Can't build with Nuitka since OpenCV was added to the project or rather can build but get the "OpenCV recursion error" and can't run the app.
+
 Nuitka - 1.9.6
 
 Python - 3.10
