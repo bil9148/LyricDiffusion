@@ -8,6 +8,7 @@ import images2Video
 import settings as settings
 import utils
 import os
+import qdarktheme
 
 
 class FontManager:
@@ -417,6 +418,8 @@ class SettingsWidget(QtWidgets.QWidget):
 
 def showGUI():
     app = QtWidgets.QApplication([])
+
+    qdarktheme.setup_theme()
 
     main_app = LyricsGeneratorApp()
     main_app.show()
