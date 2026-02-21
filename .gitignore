@@ -169,3 +169,4 @@ log.txt
 images/
 videos/
 nuitka-crash-report.xml
+.vscode/

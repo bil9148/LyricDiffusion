@@ -1,8 +1,12 @@
+import os
 from lyricsgenius import Genius
 import settings as settings
 import gui
 
-GENIUSAPIKEY = "REDACTED_GENIUS_API_KEY"
+GENIUSAPIKEY = os.environ.get("GENIUS_API_KEY")
+if not GENIUSAPIKEY:
+    raise EnvironmentError("GENIUS_API_KEY environment variable is not set. "
+                           "Get your API key from https://genius.com/api-clients")
 
 
 def getLyrics(songName: str, artistName: str, askIfCorrect: bool = False):

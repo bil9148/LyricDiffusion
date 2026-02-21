@@ -1,3 +1,4 @@
+import os
 import unittest
 from db import Database
 
@@ -6,7 +7,11 @@ class TestDatabase(unittest.TestCase):
     def setUp(self):
         self.testing_DB_name = "testing_db42069"
         self.database = Database(
-            host="127.0.0.1", port="5432", user="postgres", password="REDACTED_DB_PASSWORD", database="postgres")
+            host=os.environ.get("DB_HOST", "127.0.0.1"),
+            port=os.environ.get("DB_PORT", "5432"),
+            user=os.environ.get("DB_USER", "postgres"),
+            password=os.environ.get("DB_PASSWORD", ""),
+            database=os.environ.get("DB_NAME", "postgres"))
 
         self.database.setupTestingDatabase()
 

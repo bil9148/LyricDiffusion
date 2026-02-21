@@ -100,4 +100,10 @@
 #         except psycopg2.Error as e:
 #             BasicUI.HandleError(e)
 
-# DATABASE = Database("localhost", 5432, "postgres", "REDACTED_DB_PASSWORD", "postgres")
+# DATABASE = Database(
+#     os.environ.get("DB_HOST", "localhost"),
+#     int(os.environ.get("DB_PORT", 5432)),
+#     os.environ.get("DB_USER", "postgres"),
+#     os.environ.get("DB_PASSWORD", ""),
+#     os.environ.get("DB_NAME", "postgres")
+# )
